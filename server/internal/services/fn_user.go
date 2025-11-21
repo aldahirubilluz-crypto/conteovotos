@@ -109,9 +109,6 @@ func (s *UserManagementService) CreateUser(req dto.CreateUserRequest, createdByI
 	if req.Email == "" {
 		return nil, ErrCreateUserEmailRequired
 	}
-	if req.Office == nil || *req.Office == "" {
-		return nil, ErrCreateUserOfficeRequired
-	}
 
 	var creator models.User
 	if err := s.db.Where("id = ?", createdByID).First(&creator).Error; err != nil {
@@ -221,11 +218,6 @@ func (s *UserManagementService) UpdateUser(targetID, requesterID, requesterRole,
 	}
 	if req.IsActive != nil {
 		targetUser.IsActive = *req.IsActive
-	}
-
-	// Solo el admin puede cambiar Rol u Office
-	if req.Rol != nil && requesterRole == string(models.RolAdmin) {
-		targetUser.Rol = models.Rol(*req.Rol)
 	}
 
 	if err := s.db.Save(&targetUser).Error; err != nil {

@@ -12,7 +12,7 @@ func RegisterRoutes(app *fiber.App, db *gorm.DB) {
 		return c.JSON(fiber.Map{"status": "ok"})
 	})
 
-	// RegisterAuthRoutes(app)
+	RegisterAuthRoutes(app)
 	RegisterUserRoutes(app, db)
 
 }

@@ -5,7 +5,6 @@ type UserResponse struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Role     string `json:"role"`
-	Office   string `json:"office"`
 	IsActive bool   `json:"isActive"`
 	HasVoted bool   `json:"hasVoted"`
 }
@@ -41,15 +40,12 @@ type AuthResponse struct {
 	Email  string  `json:"email"`
 	Name   *string `json:"name"`
 	Role   string  `json:"role"`
-	Office *string `json:"office"`
 	Token  string  `json:"token"`
 }
 
 type CreateUserRequest struct {
 	Name   *string `json:"name"`
 	Email  string  `json:"email" validate:"required,email"`
-	Office *string `json:"office" validate:"required"`
-	Phone  *string `json:"phone"`
 }
 
 type CreateUserResponse struct {
@@ -57,18 +53,12 @@ type CreateUserResponse struct {
 	Name              string  `json:"name"`
 	Email             string  `json:"email"`
 	Role              string  `json:"role"`
-	Office            string  `json:"office"`
-	Phone             *string `json:"phone"`
 	GeneratedPassword *string `json:"generatedPassword"`
 }
-
 
 
 type UpdateUserRequest struct {
 	Name     *string `json:"name,omitempty"`
 	Email    *string `json:"email,omitempty"`
-	Phone    *string `json:"phone,omitempty"`
-	Rol      *string `json:"rol,omitempty"`
-	Office   *string `json:"office,omitempty"`
 	IsActive *bool   `json:"isActive,omitempty"`
 }

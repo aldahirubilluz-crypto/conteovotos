@@ -4,7 +4,6 @@ import (
 	"errors"
 )
 
-
 var (
 	ErrSigninEmailRequired     = errors.New("email is required")
 	ErrSigninPasswordRequired  = errors.New("password is required")
@@ -23,3 +22,5 @@ var (
 	ErrSignupEmailTaken               = errors.New("email is already in use")
 	ErrGoogleSignupNotAllowed         = errors.New("google signup is not allowed, user must be created by admin")
 )
+
+
