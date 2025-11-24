@@ -31,4 +31,7 @@ var (
 	ErrMesaNotFound     = errors.New("mesa no encontrada")
 	ErrDuplicateVote    = errors.New("ya existe un voto para este candidato en esta mesa")
 	ErrInvalidVoteCount = errors.New("el número de votos no puede ser negativo")
+
+	ErrUnauthorized      = errors.New("solo ADMIN puede realizar esta acción")
+	ErrCandidateNotFound = errors.New("candidato no encontrado")
 )

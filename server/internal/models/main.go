@@ -45,12 +45,21 @@ type Candidate struct {
 	Base
 	Name        string  `gorm:"type:varchar(120);not null"`
 	Description *string `gorm:"type:text"`
-	ImageURL    string  `gorm:"type:varchar(500)"`
+	ImageID     *string `gorm:"type:uuid"`
+	Image       *Image  `gorm:"foreignKey:ImageID;constraint:OnDelete:SET NULL"`
 	IsActive    bool    `gorm:"default:true"`
 	Order       int     `gorm:"default:0"`
 
 	PositionID *string   `gorm:"type:uuid"`
 	Position   *Position `gorm:"foreignKey:PositionID;constraint:OnDelete:SET NULL"`
+}
+
+type Image struct {
+	Base
+	Filename    string `gorm:"type:varchar(255);not null"`
+	Name string `gorm:"type:varchar(255);not null"`
+	Data        []byte `gorm:"type:bytea;not null"`
+	URL         string `gorm:"type:varchar(500)"`
 }
 
 type Position struct {

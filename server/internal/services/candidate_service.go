@@ -8,11 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-var (
-	ErrUnauthorized      = errors.New("solo ADMIN puede realizar esta acción")
-	ErrCandidateNotFound = errors.New("candidato no encontrado")
-)
-
 type CandidateService interface {
 	Create(req dto.CreateCandidateRequest, userID, userRole string) (*dto.CandidateResponse, error)
 	GetAll(userID, userRole string) ([]dto.CandidateResponse, error)
@@ -35,9 +30,13 @@ func mapModelToResponse(c models.Candidate) dto.CandidateResponse {
 		ID:          c.ID,
 		Name:        c.Name,
 		Description: c.Description,
-		ImageURL:    c.ImageURL,
 		Order:       c.Order,
 		IsActive:    c.IsActive,
+	}
+
+	if c.Image != nil {
+		response.ImageURL = c.Image.URL
+		response.ImageID = &c.Image.ID
 	}
 
 	if c.Position != nil {
@@ -53,7 +52,7 @@ func mapModelToResponse(c models.Candidate) dto.CandidateResponse {
 func (s *candidateServiceImpl) GetAll(userID, userRole string) ([]dto.CandidateResponse, error) {
 	var candidates []models.Candidate
 
-	if err := s.db.Preload("Position").Find(&candidates).Error; err != nil {
+	if err := s.db.Preload("Position").Preload("Image").Find(&candidates).Error; err != nil {
 		return nil, err
 	}
 
@@ -68,7 +67,7 @@ func (s *candidateServiceImpl) GetAll(userID, userRole string) ([]dto.CandidateR
 func (s *candidateServiceImpl) GetOne(id, userID, userRole string) (*dto.CandidateResponse, error) {
 	var candidate models.Candidate
 
-	if err := s.db.Preload("Position").Where("id = ?", id).First(&candidate).Error; err != nil {
+	if err := s.db.Preload("Position").Preload("Image").Where("id = ?", id).First(&candidate).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, ErrCandidateNotFound
 		}
@@ -94,10 +93,19 @@ func (s *candidateServiceImpl) Create(req dto.CreateCandidateRequest, userID, us
 		}
 	}
 
+	if req.ImageID != "" {
+		var image models.Image
+		if err := s.db.First(&image, "id = ?", req.ImageID).Error; err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return nil, errors.New("imagen no encontrada")
+			}
+			return nil, err
+		}
+	}
+
 	candidate := models.Candidate{
 		Name:        req.Name,
 		Description: req.Description,
-		ImageURL:    req.ImageURL,
 		IsActive:    true,
 		Order:       0,
 	}
@@ -110,6 +118,9 @@ func (s *candidateServiceImpl) Create(req dto.CreateCandidateRequest, userID, us
 	}
 	if req.PositionID != "" {
 		candidate.PositionID = &req.PositionID
+	}
+	if req.ImageID != "" {
+		candidate.ImageID = &req.ImageID
 	}
 
 	if err := s.db.Create(&candidate).Error; err != nil {
@@ -138,9 +149,6 @@ func (s *candidateServiceImpl) Update(id string, req dto.UpdateCandidateRequest,
 	if req.Description != nil {
 		candidate.Description = req.Description
 	}
-	if req.ImageURL != nil {
-		candidate.ImageURL = *req.ImageURL
-	}
 	if req.IsActive != nil {
 		candidate.IsActive = *req.IsActive
 	}
@@ -160,6 +168,21 @@ func (s *candidateServiceImpl) Update(id string, req dto.UpdateCandidateRequest,
 				return nil, err
 			}
 			candidate.PositionID = req.PositionID
+		}
+	}
+
+	if req.ImageID != nil {
+		if *req.ImageID == "" {
+			candidate.ImageID = nil
+		} else {
+			var image models.Image
+			if err := s.db.First(&image, "id = ?", *req.ImageID).Error; err != nil {
+				if errors.Is(err, gorm.ErrRecordNotFound) {
+					return nil, errors.New("imagen no encontrada")
+				}
+				return nil, err
+			}
+			candidate.ImageID = req.ImageID
 		}
 	}
 

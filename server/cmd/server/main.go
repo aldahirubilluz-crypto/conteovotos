@@ -135,6 +135,7 @@ func initDatabase() (wasCreated bool, wasReset bool, err error) {
 		&models.Candidate{},
 		&models.Position{},
 		&models.Vote{},
+		&models.Image{},
 	)
 
 	if err != nil {

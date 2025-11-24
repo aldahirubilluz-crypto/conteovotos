@@ -20,6 +20,7 @@ func modelOrderUp() []any {
 		&models.Candidate{},
 		&models.Position{},
 		&models.Vote{},
+		&models.Image{},
 	}
 }
 
@@ -31,6 +32,7 @@ func modelOrderDown() []any {
 		&models.Candidate{},
 		&models.Position{},
 		&models.Vote{},
+		&models.Image{},
 	}
 }
 
