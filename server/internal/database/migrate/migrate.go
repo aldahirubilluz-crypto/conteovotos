@@ -17,10 +17,9 @@ func modelOrderUp() []any {
 	return []any{
 		&models.User{},
 		&models.Account{},
-		&models.Mesa{},
 		&models.Candidate{},
+		&models.Position{},
 		&models.Vote{},
-		&models.Document{},
 	}
 }
 
@@ -29,14 +28,12 @@ func modelOrderDown() []any {
 	return []any{
 		&models.User{},
 		&models.Account{},
-		&models.Mesa{},
 		&models.Candidate{},
+		&models.Position{},
 		&models.Vote{},
-		&models.Document{},
 	}
 }
 
-// ===== MIGRACIONES =====
 
 func migrateUp(db *gorm.DB) error {
 	if err := db.Exec(`CREATE EXTENSION IF NOT EXISTS pgcrypto;`).Error; err != nil {
@@ -75,7 +72,6 @@ func migrateReset(db *gorm.DB) error {
 	return nil
 }
 
-// ===== HANDLER PRINCIPAL =====
 
 func HandleMigration() {
 	cmd := flag.String("cmd", "up", "Comando: up, down, reset")

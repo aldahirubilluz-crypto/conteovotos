@@ -1,4 +1,3 @@
-// server/internal/services/fn_auth_signin.go
 package services
 
 import (
@@ -12,9 +11,8 @@ import (
 	"gorm.io/gorm"
 )
 
-
+// Signin: maneja login con provider "credentials" o "google"
 func (s *authServiceImpl) Signin(req dto.SigninRequest) (*dto.AuthResponse, error) {
-	// ======= VALIDAR FORMATO DEL BODY =======
 	if req.Provider == nil || *req.Provider == "" {
 		return nil, ErrInvalidRequestBody
 	}
@@ -22,7 +20,7 @@ func (s *authServiceImpl) Signin(req dto.SigninRequest) (*dto.AuthResponse, erro
 	switch *req.Provider {
 	case "google":
 		if req.Email == "" {
-			return nil, ErrInvalidRequestBody
+			return nil, ErrSigninEmailRequired
 		}
 		return s.signinWithGoogle(req.Email)
 
@@ -53,7 +51,6 @@ func (s *authServiceImpl) Signin(req dto.SigninRequest) (*dto.AuthResponse, erro
 			return nil, ErrInvalidCredentials
 		}
 
-
 		return s.buildAuthResponseWithToken(&user)
 
 	default:
@@ -61,36 +58,7 @@ func (s *authServiceImpl) Signin(req dto.SigninRequest) (*dto.AuthResponse, erro
 	}
 }
 
-// ------------------------------------------------
-// 🔐 LOGIN WITH PASSWORD
-// ------------------------------------------------
-func (s *authServiceImpl) signinWithPassword(req dto.SigninRequest) (*dto.AuthResponse, error) {
-	if req.Password == "" {
-		return nil, ErrSigninPasswordRequired
-	}
-
-	var user models.User
-	if err := s.db.Where("email = ?", req.Email).First(&user).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, ErrUserNotFound
-		}
-		return nil, err
-	}
-
-	if !user.IsActive {
-		return nil, ErrUserInactive
-	}
-
-	if err := s.argon.ComparePassword(user.Password, req.Password); err != nil {
-		return nil, ErrInvalidCredentials
-	}
-
-	return s.buildAuthResponseWithToken(&user)
-}
-
-// ------------------------------------------------
-// 🔐 LOGIN WITH GOOGLE
-// ------------------------------------------------
+// signinWithGoogle: login mediante Google
 func (s *authServiceImpl) signinWithGoogle(email string) (*dto.AuthResponse, error) {
 	var user models.User
 	if err := s.db.Where("email = ?", email).First(&user).Error; err != nil {
@@ -107,10 +75,7 @@ func (s *authServiceImpl) signinWithGoogle(email string) (*dto.AuthResponse, err
 	return s.buildAuthResponseWithToken(&user)
 }
 
-
-// ------------------------------------------------
-// 🛠️ BUILD RESPONSE + TOKEN
-// ------------------------------------------------
+// buildAuthResponseWithToken: genera JWT y construye la respuesta
 func (s *authServiceImpl) buildAuthResponseWithToken(u *models.User) (*dto.AuthResponse, error) {
 	jwtSecret := []byte(os.Getenv("JWT_SECRET"))
 	if len(jwtSecret) == 0 {
@@ -130,12 +95,11 @@ func (s *authServiceImpl) buildAuthResponseWithToken(u *models.User) (*dto.AuthR
 		return nil, err
 	}
 
-
 	return &dto.AuthResponse{
-		ID:     u.ID,
-		Email:  u.Email,
-		Name:   &u.Name,
-		Role:   string(u.Rol),
-		Token:  tokenString,
+		ID:    u.ID,
+		Email: u.Email,
+		Name:  &u.Name,
+		Role:  string(u.Rol),
+		Token: tokenString,
 	}, nil
 }

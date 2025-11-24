@@ -28,7 +28,6 @@ func main() {
 	logger.InitLogger()
 	logger.Log.Info("🚀 Iniciando servidor...")
 
-	// Inicializar carpeta uploads
 	if err := fileupload.InitUploadDir(); err != nil {
 		logger.Log.Fatalf("❌ Error inicializando directorio uploads: %v", err)
 	}
@@ -56,7 +55,7 @@ func main() {
 	app := fiber.New(fiber.Config{
 		AppName:      "Inventario Server",
 		ErrorHandler: middlewares.JSONErrorHandler,
-		BodyLimit:    10 * 1024 * 1024, // 10 MB para subir PDFs
+		BodyLimit:    10 * 1024 * 1024,
 	})
 
 	app.Use(middlewares.CORSMiddleware())
@@ -130,21 +129,19 @@ func initDatabase() (wasCreated bool, wasReset bool, err error) {
 		return wasCreated, wasReset, fmt.Errorf("error conectando a la base de datos: %w", err)
 	}
 
-	// SIEMPRE ejecutar AutoMigrate (es idempotente, no duplica tablas)
 	err = config.DB.AutoMigrate(
 		&models.User{},
 		&models.Account{},
-		&models.Mesa{},
 		&models.Candidate{},
+		&models.Position{},
 		&models.Vote{},
-		&models.Document{},
 	)
+
 	if err != nil {
 		return wasCreated, wasReset, fmt.Errorf("error migrando tablas: %w", err)
 	}
 	logger.Log.Info("✅ Tablas migradas correctamente")
 
-	// SIEMPRE verificar si hay datos y ejecutar seed si está vacío
 	var userCount int64
 	config.DB.Model(&models.User{}).Count(&userCount)
 	if userCount == 0 {

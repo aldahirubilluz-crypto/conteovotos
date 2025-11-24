@@ -1,4 +1,3 @@
-// server/internal/routes/routes.go
 package routes
 
 import (
@@ -13,6 +12,7 @@ func RegisterRoutes(app *fiber.App, db *gorm.DB) {
 	})
 
 	RegisterAuthRoutes(app)
-	RegisterUserRoutes(app, db)
-
+	RegisterPositionRoutes(app, db)
+	RegisterCandidateRoutes(app, db)
+	RegisterVoteRoutes(app, db)
 }
