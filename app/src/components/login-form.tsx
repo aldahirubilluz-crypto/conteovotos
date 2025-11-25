@@ -12,48 +12,92 @@ import {
   CardDescription,
   CardHeader,
 } from "@/components/ui/card";
-import { Lock, Mail, Shield, ChevronRight, ShieldUser } from "lucide-react";
+import {
+  Lock,
+  Mail,
+  Shield,
+  ChevronRight,
+  ShieldUser,
+  EyeOff,
+  Eye,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { toast } from "sonner";
+import { Label } from "./ui/label";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [focused, setFocused] = useState<string | null>(null);
   const [googleLoading, setGoogleLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  async function onSubmit(event: React.FormEvent) {
+    event.preventDefault();
     setIsLoading(true);
 
     try {
-      if (!email || !password) {
-        setError("Por favor, completa todos los campos");
+      const result = await signIn("credentials", {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        toast.error("Error de autenticación", {
+          description:
+            "Credenciales incorrectas. Por favor, verifica tu email y contraseña.",
+        });
+        setIsLoading(false);
         return;
       }
 
-      if (!email.includes("@")) {
-        setError("Por favor, ingresa un correo válido");
-        return;
-      }
+      if (result?.ok) {
+        toast.success("¡Bienvenido!", {
+          description: "Has iniciado sesión correctamente.",
+        });
 
-      console.log("Intento de acceso:", { email, password });
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    } catch {
-      setError("Error al procesar tu solicitud. Intenta nuevamente.");
-    } finally {
+        router.push("/admin/main");
+        router.refresh();
+      }
+    } catch (error) {
+      console.error("Error durante el login:", error);
+      toast.error("Error inesperado", {
+        description:
+          "Ocurrió un error al intentar iniciar sesión. Inténtalo de nuevo.",
+      });
       setIsLoading(false);
     }
-  };
+  }
 
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
+
+    try {
+      await signIn("google", {
+        callbackUrl: "/admin/main",
+      });
+    } catch (error) {
+      console.error("Error durante Google login:", error);
+      toast.error("Error inesperado", {
+        description: "Ocurrió un error al iniciar sesión con Google.",
+      });
+      setGoogleLoading(false);
+    }
   };
 
   return (
     <div className="w-full max-w-md">
-      <div className="flex flex-col items-center p-4">
+      <div className="flex flex-col items-center p-2">
         <div className="relative">
           <div className="absolute inset-0 w-24 h-24 rounded-full bg-linear-to-br from-accent via-accent/50 to-transparent opacity-20 blur-xl" />
 
@@ -87,70 +131,66 @@ export default function LoginForm() {
         </CardHeader>
 
         <CardContent className="relative z-10">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-3">
-              <label
-                htmlFor="email"
-                className="text-sm font-semibold text-foreground flex items-center gap-2"
-              >
-                <Mail className="w-4 h-4 text-foreground" />
-                Correo Institucional
-              </label>
-              <div className="relative group">
+          <form onSubmit={onSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="email">Correo electrónico</Label>
+
+              <div className="relative">
+                <Mail className="absolute left-3 inset-y-0 my-auto h-4 w-4 text-muted-foreground" />
+
                 <Input
                   id="email"
+                  placeholder="nombre@gmail.com"
                   type="email"
-                  placeholder="usuario@institucion.gob.mx"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  onFocus={() => setFocused("email")}
-                  onBlur={() => setFocused(null)}
-                  className={`pl-12 h-12 text-base border-2 transition-all duration-200 ${
-                    focused === "email"
-                      ? "border-accent bg-accent/5"
-                      : "border-border"
-                  }`}
+                  value={formData.email}
+                  onChange={onChange}
+                  className="pl-9 h-11 border-border/50 focus-visible:ring-primary"
+                  required
                   disabled={isLoading}
-                  aria-label="Correo institucional"
                 />
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
               </div>
             </div>
 
-            <div className="space-y-3">
-              <label
-                htmlFor="password"
-                className="text-sm font-semibold text-foreground flex items-center gap-2"
-              >
-                <Lock className="w-4 h-4 text-foreground" />
-                Contraseña
-              </label>
-              <div className="relative group">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Contraseña</Label>
+                <a
+                  href="/auth/identify"
+                  className="text-sm font-medium text-primary hover:underline"
+                >
+                  ¿Olvidaste tu contraseña?
+                </a>
+              </div>
+              <div className="relative">
+                <Lock className="absolute left-3 inset-y-0 my-auto h-4 w-4 text-muted-foreground" />
+
                 <Input
                   id="password"
-                  type="password"
-                  placeholder="••••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onFocus={() => setFocused("password")}
-                  onBlur={() => setFocused(null)}
-                  className={`pl-12 h-12 text-base border-2 transition-all duration-200 ${
-                    focused === "password"
-                      ? "border-accent bg-accent/5"
-                      : "border-border"
-                  }`}
+                  placeholder="••••••••"
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={onChange}
+                  className="pl-9 pr-9 h-11 border-border/50 focus-visible:ring-primary"
+                  required
                   disabled={isLoading}
-                  aria-label="Contraseña"
                 />
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 inset-y-0 my-auto h-9 w-9 text-muted-foreground hover:text-foreground"
+                  onClick={() => setShowPassword(!showPassword)}
+                  disabled={isLoading}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </Button>
               </div>
             </div>
-
-            {error && (
-              <div className="p-4 bg-destructive/10 border-2 border-destructive/30 rounded-lg">
-                <p className="text-sm text-destructive font-medium">{error}</p>
-              </div>
-            )}
 
             <Button
               type="submit"

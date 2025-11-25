@@ -33,6 +33,7 @@ import { ModeToggle } from "./mode-toggle";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
+import type { Session } from "next-auth";
 
 const navItems = [
   { name: "Subir", href: "/admin/main", icon: ArrowUpFromLine },
@@ -45,6 +46,7 @@ export default function MainSidebar({
   children,
 }: {
   children: React.ReactNode;
+  session: Session;
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
