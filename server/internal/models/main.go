@@ -56,10 +56,9 @@ type Candidate struct {
 
 type Image struct {
 	Base
-	Filename    string `gorm:"type:varchar(255);not null"`
-	Name string `gorm:"type:varchar(255);not null"`
-	Data        []byte `gorm:"type:bytea;not null"`
-	URL         string `gorm:"type:varchar(500)"`
+	Filename string `gorm:"type:varchar(255);not null"`
+	Name     string `gorm:"type:varchar(255);not null"`
+	URL      string `gorm:"type:varchar(500)"`
 }
 
 type Position struct {

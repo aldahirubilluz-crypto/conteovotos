@@ -17,12 +17,12 @@ type FileUploader struct {
 
 func NewFileUploader() *FileUploader {
 	return &FileUploader{
-		BaseDir: "uploads/documents",
+		BaseDir: "uploads/",
 	}
 }
 
 func InitUploadDir() error {
-	baseDir := "uploads/documents"
+	baseDir := "uploads/"
 	if err := os.MkdirAll(baseDir, 0755); err != nil {
 		return fmt.Errorf("error creando directorio uploads: %v", err)
 	}
