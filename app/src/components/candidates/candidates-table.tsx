@@ -13,7 +13,7 @@ import { Edit, Trash2, User } from "lucide-react";
 import { useState } from "react";
 import { ConfirmDialog } from "../ui/dialog-confirm";
 import { toast } from "sonner";
-import { GetCantidatos } from "../types/cantidatos";
+import { GetCantidatos } from "../types/cantidates";
 import { DeleteCandidatesAction } from "@/actions/cantidatos";
 import FormEditCandidate from "./form-edit-candidate";
 

@@ -24,7 +24,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { UpdateCandidateAction } from "@/actions/cantidatos";
 import { Upload, X } from "lucide-react";
 import { candidatesUpdateSchema, candidatesUpdateFormValues } from "../schema/schema-candidates";
-import { GetCantidatos } from "../types/cantidatos";
+import { GetCantidatos } from "../types/cantidates";
 
 interface FormEditCandidateProps {
     candidate: GetCantidatos;

@@ -29,5 +29,6 @@ export default function Page() {
 
     loadData();
   }, [session]);
+  return <div className="max-h-[500px] h-full">Hola</div>
 
 }

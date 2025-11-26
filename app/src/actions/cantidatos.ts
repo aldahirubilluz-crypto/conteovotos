@@ -1,4 +1,4 @@
-import { PosCandidate, UpdateCandidate } from "@/components/types/cantidatos";
+import { PosCandidate, UpdateCandidate } from "@/components/types/cantidates";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 

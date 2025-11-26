@@ -3,7 +3,7 @@
 import { getCantidatosAction } from "@/actions/cantidatos";
 import CandidatesTable from "@/components/candidates/candidates-table";
 import CreateCandidates from "@/components/candidates/create-candidates";
-import { GetCantidatos } from "@/components/types/cantidatos";
+import { GetCantidatos } from "@/components/types/cantidates";
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";

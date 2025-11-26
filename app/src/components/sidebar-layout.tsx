@@ -55,7 +55,7 @@ export default function MainSidebar({
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background text-foreground">
+      <div className="flex max-h-screen w-full bg-background text-foreground">
         <Sidebar
           collapsible="icon"
           className="hidden sm:flex flex-col shadow-lg border-r border-border/40 bg-background/90 backdrop-blur-md"
