@@ -2,12 +2,13 @@
 
 import {
   PackageOpen,
-  UserPen,
   Settings,
   LogOut,
   PanelLeftIcon,
-  ArrowUpFromLine,
   Files,
+  Warehouse,
+  Users,
+  CirclePlus,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -36,9 +37,10 @@ import { signOut } from "next-auth/react";
 import type { Session } from "next-auth";
 
 const navItems = [
-  { name: "Subir", href: "/admin/main", icon: ArrowUpFromLine },
-  { name: "Agentes", href: "/admin/main/agents", icon: UserPen },
-  { name: "Archivos", href: "/admin/main/muniments", icon: Files },
+  { name: "Registar", href: "/admin/main", icon: Warehouse },
+  { name: "Puestos", href: "/admin/main/positions", icon: CirclePlus },
+  { name: "Candidatos", href: "/admin/main/candidates", icon: Users },
+  { name: "Documentos", href: "/admin/main/documents", icon: Files },
   { name: "Configuración", href: "/admin/main/configuration", icon: Settings },
 ];
 
@@ -172,7 +174,7 @@ export default function MainSidebar({
           </SheetContent>
         </Sheet>
 
-        <main className="flex w-full h-full max-h-screen overflow-auto p-3 lg:p-4 bg-background/90 items-center justify-center">
+        <main className="flex w-full h-full max-h-screen overflow-auto p-3 lg:p-4 bg-background/90">
           {children}
         </main>
       </div>
