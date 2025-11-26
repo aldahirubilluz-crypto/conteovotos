@@ -31,12 +31,10 @@ func (s *voteServiceImpl) Create(req dto.CreateVoteRequest, userID, userRole str
 		return nil, ErrUnauthorized
 	}
 
-	// Validar que el número de votos no sea negativo
 	if req.TotalVotes < 0 {
 		return nil, ErrInvalidVoteCount
 	}
 
-	// Validar que el candidato existe
 	var candidate models.Candidate
 	if err := s.db.First(&candidate, "id = ?", req.CandidateID).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -45,16 +43,13 @@ func (s *voteServiceImpl) Create(req dto.CreateVoteRequest, userID, userRole str
 		return nil, err
 	}
 
-	// Verificar que no exista ya un voto para este candidato en esta mesa
 	var existingVote models.Vote
 	err := s.db.Where("mesa = ? AND candidate_id = ?", req.Mesa, req.CandidateID).
 		First(&existingVote).Error
 
 	if err == nil {
-		// Ya existe un voto, retornar error
 		return nil, ErrDuplicateVote
 	} else if !errors.Is(err, gorm.ErrRecordNotFound) {
-		// Error diferente a "no encontrado"
 		return nil, err
 	}
 

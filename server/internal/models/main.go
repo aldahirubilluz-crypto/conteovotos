@@ -43,12 +43,11 @@ type Account struct {
 
 type Candidate struct {
 	Base
-	Name        string  `gorm:"type:varchar(120);not null"`
+	Name        string  `gorm:"type:varchar(120); unique;not null"`
 	Description *string `gorm:"type:text"`
 	ImageID     *string `gorm:"type:uuid"`
 	Image       *Image  `gorm:"foreignKey:ImageID;constraint:OnDelete:SET NULL"`
 	IsActive    bool    `gorm:"default:true"`
-	Order       int     `gorm:"default:0"`
 
 	PositionID *string   `gorm:"type:uuid"`
 	Position   *Position `gorm:"foreignKey:PositionID;constraint:OnDelete:SET NULL"`

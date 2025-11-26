@@ -17,9 +17,9 @@ import { Switch } from "@/components/ui/switch";
 import { ConfirmDialog } from "../ui/dialog-confirm";
 import { useState } from "react";
 import { toast } from "sonner";
-import { PostUpdateAction } from "@/actions/position";
-import { PositionUpdateFormValues, positionUpdateSchema } from "../schema/schema-position";
+import { UpdatePositionAction } from "@/actions/position";
 import { GetPosition } from "../types/position";
+import { PositionUpdateFormValues, positionUpdateSchema } from "../schema/schema-position";
 
 interface FormEditPositionProps {
     position: GetPosition;
@@ -46,7 +46,7 @@ export default function FormEditPosition({ position, handlerClose, token, onSucc
     const confirmUpdate = async () => {
         setIsLoading(true);
         const values = form.getValues();
-        const res = await PostUpdateAction(position.id, values, token);
+        const res = await UpdatePositionAction(position.id, values, token);
 
         if (!res.success || res.status !== 200) {
             setIsLoading(false);

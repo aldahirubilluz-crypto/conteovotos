@@ -15,7 +15,7 @@ export async function GetPositionAction(token: string) {
         success: false,
         error: json.message || "Error al obtener usuarios",
       };
-    return { success: true, data: json.data };
+    return { success: true, data: json.data ?? [] };
   } catch (error) {
     return { success: false, error };
   }
@@ -51,7 +51,7 @@ export async function PostPositionAction(values: PosPostion, token: string) {
   }
 }
 
-export async function PostDeleteAction(id: string, token: string) {
+export async function DeletePositionAction(id: string, token: string) {
   try {
     const res = await fetch(`${API}/positions/${id}`, {
       method: "DELETE",
@@ -80,7 +80,7 @@ export async function PostDeleteAction(id: string, token: string) {
   }
 }
 
-export async function PostUpdateAction(id: string, values: UpdatePostion, token: string) {
+export async function UpdatePositionAction(id: string, values: UpdatePostion, token: string) {
   try {
     const res = await fetch(`${API}/positions/${id}`, {
       method: "PATCH",

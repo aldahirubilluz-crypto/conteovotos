@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"path/filepath"
-	"strconv"
 
 	"github.com/gofiber/fiber/v3"
 	"server/internal/dto"
@@ -60,13 +59,6 @@ func (h *CandidateHandler) Create(c fiber.Ctx) (interface{}, string, error) {
 		isActive = &val
 	}
 
-	var order *int
-	if orderStr := c.FormValue("order"); orderStr != "" {
-		if val, err := strconv.Atoi(orderStr); err == nil {
-			order = &val
-		}
-	}
-
 	// Manejar la imagen si se envió
 	var imageID string
 	file, err := c.FormFile("image")
@@ -100,7 +92,6 @@ func (h *CandidateHandler) Create(c fiber.Ctx) (interface{}, string, error) {
 		Name:        name,
 		Description: descPtr,
 		ImageID:     imageID,
-		Order:       order,
 		IsActive:    isActive,
 		PositionID:  positionID,
 	}

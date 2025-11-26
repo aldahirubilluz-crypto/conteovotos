@@ -1,4 +1,4 @@
-import { GetPosition } from "../types/position";
+/* eslint-disable @next/next/no-img-element */
 import {
     Table,
     TableBody,
@@ -9,26 +9,30 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "../ui/button";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2, User } from "lucide-react";
 import { useState } from "react";
 import { ConfirmDialog } from "../ui/dialog-confirm";
 import { toast } from "sonner";
-import FormEditPosition from "./form-edit-position";
-import { DeletePositionAction } from "@/actions/position";
+import { GetCantidatos } from "../types/cantidatos";
+import { DeleteCandidatesAction } from "@/actions/cantidatos";
+import FormEditCandidate from "./form-edit-candidate";
+
 type PropsTable = {
-    data: GetPosition[];
+    data: GetCantidatos[];
     token: string;
     onRefresh: () => void;
 };
 
-export default function PositionTable({ data, token, onRefresh }: PropsTable) {
+const API = process.env.NEXT_PUBLIC_API_URL;
+
+export default function CandidatesTable({ data, token, onRefresh }: PropsTable) {
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
     const [selectedId, setSelectedId] = useState<string>("");
-    const [selectedPosition, setSelectedPosition] = useState<GetPosition | null>(null);
+    const [selectedCandidate, setSelectedCandidate] = useState<GetCantidatos | null>(null);
 
-    const onEdit = (position: GetPosition) => {
-        setSelectedPosition(position);
+    const onEdit = (candidate: GetCantidatos) => {
+        setSelectedCandidate(candidate);
         setEditOpen(true);
     };
 
@@ -38,15 +42,13 @@ export default function PositionTable({ data, token, onRefresh }: PropsTable) {
     };
 
     const confirmDelete = async () => {
-
-        const res = await DeletePositionAction(selectedId, token);
+        const res = await DeleteCandidatesAction(selectedId, token);
 
         if (!res.success || res.status !== 200) {
-
-            return toast.error(res.message ?? "No se pudo eliminar el puesto");
+            return toast.error(res.message ?? "No se pudo eliminar el candidato");
         }
 
-        toast.success(res.message || "Puesto eliminado correctamente");
+        toast.success(res.message || "Candidato eliminado correctamente");
         setDeleteOpen(false);
         setSelectedId("");
         onRefresh();
@@ -59,16 +61,31 @@ export default function PositionTable({ data, token, onRefresh }: PropsTable) {
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                <TableHead>Logo</TableHead>
                                 <TableHead>Nombre</TableHead>
                                 <TableHead>Descripción</TableHead>
                                 <TableHead>Activo</TableHead>
-                                <TableHead>Creado</TableHead>
+                                <TableHead>Posición</TableHead>
                                 <TableHead className="text-right">Acciones</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {data.map((c) => (
                                 <TableRow key={c.id}>
+                                    <TableCell>
+                                        <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                                            {c.imageId ? (
+                                                <img
+                                                    src={`${API}/images/${c.imageId}`}
+                                                    alt={c.name}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                <User className="w-5 h-5 text-gray-400" />
+                                            )}
+                                        </div>
+                                    </TableCell>
+
                                     <TableCell>
                                         <div className="font-medium">{c.name}</div>
                                     </TableCell>
@@ -90,11 +107,13 @@ export default function PositionTable({ data, token, onRefresh }: PropsTable) {
                                             </span>
                                         )}
                                     </TableCell>
+
                                     <TableCell>
                                         <div className="max-w-xs truncate text-sm text-muted-foreground">
-                                            {c.createdAt.toString()}
+                                            {c.position.name || "-"}
                                         </div>
                                     </TableCell>
+
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
                                             <Button
@@ -121,9 +140,9 @@ export default function PositionTable({ data, token, onRefresh }: PropsTable) {
 
                             {data.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={5}>
+                                    <TableCell colSpan={6}>
                                         <div className="py-8 text-center text-sm text-muted-foreground">
-                                            No hay puestos para mostrar.
+                                            No hay candidatos para mostrar.
                                         </div>
                                     </TableCell>
                                 </TableRow>
@@ -137,14 +156,14 @@ export default function PositionTable({ data, token, onRefresh }: PropsTable) {
                 isOpen={deleteOpen}
                 onClose={() => setDeleteOpen(false)}
                 onConfirm={confirmDelete}
-                title="Eliminar Puesto"
-                description="¿Estás seguro de eliminar este puesto? Esta acción no se puede deshacer."
+                title="Eliminar Candidato"
+                description="¿Estás seguro de eliminar este candidato? Esta acción no se puede deshacer."
                 styleButton="text-white"
             />
 
-            {editOpen && selectedPosition && (
-                <FormEditPosition
-                    position={selectedPosition}
+            {editOpen && selectedCandidate && (
+                <FormEditCandidate
+                    candidate={selectedCandidate}
                     handlerClose={() => setEditOpen(false)}
                     token={token}
                     onSuccess={onRefresh}

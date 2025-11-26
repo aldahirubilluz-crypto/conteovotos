@@ -30,7 +30,6 @@ func mapModelToResponse(c models.Candidate) dto.CandidateResponse {
 		ID:          c.ID,
 		Name:        c.Name,
 		Description: c.Description,
-		Order:       c.Order,
 		IsActive:    c.IsActive,
 	}
 
@@ -107,14 +106,10 @@ func (s *candidateServiceImpl) Create(req dto.CreateCandidateRequest, userID, us
 		Name:        req.Name,
 		Description: req.Description,
 		IsActive:    true,
-		Order:       0,
 	}
 
 	if req.IsActive != nil {
 		candidate.IsActive = *req.IsActive
-	}
-	if req.Order != nil {
-		candidate.Order = *req.Order
 	}
 	if req.PositionID != "" {
 		candidate.PositionID = &req.PositionID
@@ -151,9 +146,6 @@ func (s *candidateServiceImpl) Update(id string, req dto.UpdateCandidateRequest,
 	}
 	if req.IsActive != nil {
 		candidate.IsActive = *req.IsActive
-	}
-	if req.Order != nil {
-		candidate.Order = *req.Order
 	}
 
 	if req.PositionID != nil {
