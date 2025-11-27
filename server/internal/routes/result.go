@@ -16,7 +16,7 @@ func RegisterResultRoutes(app *fiber.App, db *gorm.DB) {
 	resultGroup := app.Group("/results")
 	{
 		resultGroup.Get("/", resultHandler.GetAllResults)
-		resultGroup.Get("/summary", resultHandler.GetResultsSummary)
+		resultGroup.Get("/position", resultHandler.GetResultsPosition)
 		resultGroup.Get("/position/:positionId", resultHandler.GetResultsByPosition)
 	}
 

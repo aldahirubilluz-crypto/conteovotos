@@ -43,8 +43,6 @@ export default function FormPosition({ handlerClose, token, onSuccess }: FormPos
     const confirmCreate = async () => {
         setIsLoading(true);
         const values = form.getValues();
-        console.log(values);
-
 
         const res = await PostPositionAction(values, token);
 

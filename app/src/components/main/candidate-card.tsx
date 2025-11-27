@@ -3,9 +3,7 @@ import { ProcessedCandidate } from "../types/results";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
-export function CandidateCard({ candidate, index }: { candidate: ProcessedCandidate; index: number }) {
-    console.log(candidate);
-    
+export function CandidateCard({ candidate, index }: { candidate: ProcessedCandidate; index: number }) {  
     return (
         <div
             className={`bg-white dark:bg-slate-900 p-6 rounded-xl border-2 shadow-lg transition-all ${candidate.isWinner

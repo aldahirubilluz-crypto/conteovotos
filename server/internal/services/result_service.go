@@ -10,7 +10,7 @@ import (
 
 type ResultService interface {
 	GetAllResults() ([]dto.CandidateResultResponse, error)
-	GetResultsSummary() (*dto.ResultsSummaryResponse, error)
+	GetResultsPosition() ([]dto.ResultsPositionResponse, error)
 	GetResultsByPosition(positionID string) ([]dto.CandidateResultResponse, error)
 }
 
@@ -60,23 +60,26 @@ func (s *resultServiceImpl) GetAllResults() ([]dto.CandidateResultResponse, erro
 	return results, nil
 }
 
-func (s *resultServiceImpl) GetResultsSummary() (*dto.ResultsSummaryResponse, error) {
-	results, err := s.GetAllResults()
-	if err != nil {
+func (s *resultServiceImpl) GetResultsPosition() ([]dto.ResultsPositionResponse, error) {
+	var positions []models.Position
+
+	// Solo traer puestos activos (opcional)
+	if err := s.db.Where("is_active = ?", true).Find(&positions).Error; err != nil {
 		return nil, err
 	}
 
-	// Calcular totales
-	totalVotes := 0
-	for _, result := range results {
-		totalVotes += result.TotalVotes
+	// Construir el DTO
+	var results []dto.ResultsPositionResponse
+	for _, position := range positions {
+		results = append(results, dto.ResultsPositionResponse{
+			PositionID:        position.ID,
+			Name:              position.Name,
+			TotalVotesPositon: position.TotalVotesPositon,
+			ValidPercentage:   int(position.ValidPercentage * 100),
+		})
 	}
 
-	return &dto.ResultsSummaryResponse{
-		TotalCandidates: len(results),
-		TotalVotes:      totalVotes,
-		Results:         results,
-	}, nil
+	return results, nil
 }
 
 func (s *resultServiceImpl) GetResultsByPosition(positionID string) ([]dto.CandidateResultResponse, error) {

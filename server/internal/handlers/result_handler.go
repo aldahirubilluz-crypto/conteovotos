@@ -32,10 +32,10 @@ func (h *ResultHandler) GetAllResults(c fiber.Ctx) error {
 	})
 }
 
-func (h *ResultHandler) GetResultsSummary(c fiber.Ctx) error {
-	summary, err := h.service.GetResultsSummary()
+func (h *ResultHandler) GetResultsPosition(c fiber.Ctx) error {
+	position, err := h.service.GetResultsPosition()
 	if err != nil {
-		logger.Log.Errorf("❌ GetResultsSummary failed: %v", err)
+		logger.Log.Errorf("❌ GetResultsPosition failed: %v", err)
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error":   "Error al obtener resumen",
 			"message": err.Error(),
@@ -43,7 +43,7 @@ func (h *ResultHandler) GetResultsSummary(c fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{
-		"data":    summary,
+		"data":    position,
 		"message": "Resumen obtenido correctamente",
 		"status":  200,
 	})

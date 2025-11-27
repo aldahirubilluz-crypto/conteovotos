@@ -21,4 +21,14 @@ export interface PositionChip {
   positionName: string;
   candidates: ProcessedCandidate[];
   totalVotes: number;
+  totalVotesPositon: number;
+  validPercentage: number;
+}
+
+// Nuevo tipo para el endpoint de posiciones
+export interface PositionSummary {
+  positionId: string;
+  name: string;
+  totalVotesPositon: number;
+  validPercentage: number;
 }

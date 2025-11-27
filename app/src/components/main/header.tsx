@@ -14,6 +14,7 @@ interface HeaderProps {
 }
 
 export default function HeaderResult({ stats, lastUpdated }: HeaderProps) {
+
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
@@ -54,6 +55,8 @@ export default function HeaderResult({ stats, lastUpdated }: HeaderProps) {
             <p className="text-blue-100 text-xs uppercase tracking-wider mb-1">Última Actualización</p>
             <p className="text-lg md:text-xl font-bold">{lastUpdated.toLocaleTimeString("es-PE")}</p>
           </div>
+
+          
         </div>
       </div>
     </div>

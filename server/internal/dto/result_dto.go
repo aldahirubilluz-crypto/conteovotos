@@ -10,8 +10,9 @@ type CandidateResultResponse struct {
 	ImageId       string  `json:"imageId,omitempty"`
 }
 
-type ResultsSummaryResponse struct {
-	TotalCandidates int                       `json:"totalCandidates"`
-	TotalVotes      int                       `json:"totalVotes"`
-	Results         []CandidateResultResponse `json:"results"`
+type ResultsPositionResponse struct {
+	PositionID        string `json:"positionId"`
+	Name              string `json:"name"`
+	TotalVotesPositon int    `json:"totalVotesPositon"`
+	ValidPercentage   int    `json:"validPercentage"`
 }
