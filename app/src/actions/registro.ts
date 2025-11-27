@@ -1,4 +1,8 @@
-import { PosRecord } from "@/components/types/record";
+"use server"
+
+import CandidateReportPDF from "@/components/pdf/candidate-report-pdf";
+import { GetRecord, PosRecord } from "@/components/types/record";
+import { renderToBuffer } from "@react-pdf/renderer";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -48,5 +52,24 @@ export async function PostRecordAction(values: PosRecord, token: string) {
       message: "Error de conexión",
       data: null,
     };
+  }
+}
+
+export async function generarReportePDF(
+  candidateRecords: GetRecord[],
+  candidateName: string
+) {
+  try {
+    const pdfDocument = CandidateReportPDF({
+      candidateRecords,
+      candidateName
+    });
+
+    const buffer = await renderToBuffer(pdfDocument);
+
+    return buffer.toString("base64");
+  } catch (error) {
+    console.error("Error generando PDF:", error);
+    throw new Error("No se pudo generar el reporte PDF");
   }
 }
