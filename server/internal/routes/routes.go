@@ -16,4 +16,5 @@ func RegisterRoutes(app *fiber.App, db *gorm.DB) {
 	RegisterCandidateRoutes(app, db)
 	RegisterVoteRoutes(app, db)
 	RegisterImageRoutes(app, db)
+	RegisterResultRoutes(app, db)
 }

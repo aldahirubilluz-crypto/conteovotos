@@ -94,7 +94,7 @@ export default function FormCandidate({ handlerClose, token, onSuccess }: FormCa
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50">
-            <Card className="w-full max-w-md p-4">
+            <Card className="w-full max-w-lg px-2 py-8">
                 <CardHeader className="text-center">
                     <CardTitle className="text-lg text-foreground">Registrar Candidato</CardTitle>
                 </CardHeader>

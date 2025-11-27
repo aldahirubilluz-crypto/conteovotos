@@ -69,8 +69,8 @@ export default function FormEditPosition({ position, handlerClose, token, onSucc
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50">
-            <Card className="w-full max-w-md">
-                <CardHeader>
+            <Card className="w-full max-w-md px-2 py-8 gap-2">
+                <CardHeader className="text-center">
                     <CardTitle>Editar Puesto</CardTitle>
                 </CardHeader>
 

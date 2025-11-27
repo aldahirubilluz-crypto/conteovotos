@@ -104,8 +104,8 @@ export default function FormEditCandidate({ candidate, handlerClose, token, onSu
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50">
-            <Card className="w-full max-w-md max-h-[90vh] overflow-y-auto">
-                <CardHeader>
+            <Card className="w-full max-w-lg px-2 py-8">
+                <CardHeader className="text-center">
                     <CardTitle>Editar Candidato</CardTitle>
                 </CardHeader>
 

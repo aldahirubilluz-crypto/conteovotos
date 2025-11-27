@@ -1,6 +1,6 @@
 "use client";
 
-import { VotingDashboard } from "@/components/voting-dashboard";
+import VotingDashboard from "@/components/voting-dashboard";
 
 export default function Page() {
   return (

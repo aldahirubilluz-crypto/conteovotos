@@ -114,7 +114,7 @@ export default function LoginForm() {
         </h1>
       </div>
 
-      <Card className="border-0 shadow-2xl relative overflow-hidden">
+      <Card className="border-0 shadow-2xl relative overflow-hidden px-2 py-8">
         <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-transparent via-accent to-transparent" />
 
         <div className="absolute inset-0 opacity-5">

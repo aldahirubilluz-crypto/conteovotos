@@ -5,10 +5,10 @@ import FormPosition from "./form-position"
 
 interface CreatePositionProps {
     token: string;
-    onPositionCreated: () => void;  // ← Agregar esta línea
+    onPositionCreated: () => void;
 }
 
-export default function CreatePosition({ token, onPositionCreated }: CreatePositionProps) {  // ← Agregar onPositionCreated aquí
+export default function CreatePosition({ token, onPositionCreated }: CreatePositionProps) {
     const [modalCreate, setModalCreate] = useState(false)
 
     const handlerModal = () => setModalCreate(true)
@@ -24,7 +24,7 @@ export default function CreatePosition({ token, onPositionCreated }: CreatePosit
                 <FormPosition
                     handlerClose={handlerClose}
                     token={token}
-                    onSuccess={onPositionCreated}  // ← Agregar esta línea
+                    onSuccess={onPositionCreated}
                 />
             )}
         </div>
