@@ -22,6 +22,8 @@ export default function VotingDashboardPage() {
 
   const fetchResults = async () => {
     const res = await getResults();
+    console.log(res);
+    
 
     if (res.data) {
       const data: GetResults[] = res.data;

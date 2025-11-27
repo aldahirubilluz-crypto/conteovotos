@@ -38,6 +38,8 @@ export default function FormEditPosition({ position, handlerClose, token, onSucc
             name: position.name,
             description: position.description,
             isActive: position.isActive,
+            totalVotesPositon: position.totalVotesPositon,
+            validPercentage: position.validPercentage
         },
     });
 
@@ -99,6 +101,53 @@ export default function FormEditPosition({ position, handlerClose, token, onSucc
                                         <FormLabel>Descripción</FormLabel>
                                         <FormControl>
                                             <Textarea placeholder="Descripción breve" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="totalVotesPositon"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Total de Votos</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="number"
+                                                min={0}
+                                                placeholder="0"
+                                                value={field.value ?? ""}
+                                                onChange={(e) => {
+                                                    const value = e.target.value === "" ? undefined : Number(e.target.value);
+                                                    field.onChange(value);
+                                                }}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="validPercentage"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Porcentaje Válido (%)</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="number"
+                                                min={0}
+                                                max={100}
+                                                placeholder="0"
+                                                value={field.value ?? ""}  // Muestra vacío si es undefined
+                                                onChange={(e) => {
+                                                    const value = e.target.value === "" ? undefined : Number(e.target.value);
+                                                    field.onChange(value);
+                                                }}
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

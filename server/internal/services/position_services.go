@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"gorm.io/gorm"
 	"server/internal/dto"
 	"server/internal/models"
@@ -37,12 +38,14 @@ func (s *positionServiceImpl) GetAll(userID, userRole string) ([]dto.PositionRes
 	var result []dto.PositionResponse
 	for _, p := range positions {
 		result = append(result, dto.PositionResponse{
-			ID:          p.ID,
-			Name:        p.Name,
-			Description: p.Description,
-			IsActive:    p.IsActive,
-			CreatedAt:   p.CreatedAt.Format(time.RFC3339),
-			UpdatedAt:   p.UpdatedAt.Format(time.RFC3339),
+			ID:                p.ID,
+			Name:              p.Name,
+			Description:       p.Description,
+			IsActive:          p.IsActive,
+			TotalVotesPositon: p.TotalVotesPositon,
+			ValidPercentage:   p.ValidPercentage,
+			CreatedAt:         p.CreatedAt.Format(time.RFC3339),
+			UpdatedAt:         p.UpdatedAt.Format(time.RFC3339),
 		})
 	}
 	return result, nil
@@ -62,12 +65,14 @@ func (s *positionServiceImpl) GetOne(id, userID, userRole string) (*dto.Position
 	}
 
 	return &dto.PositionResponse{
-		ID:          p.ID,
-		Name:        p.Name,
-		Description: p.Description,
-		IsActive:    p.IsActive,
-		CreatedAt:   p.CreatedAt.Format(time.RFC3339),
-		UpdatedAt:   p.UpdatedAt.Format(time.RFC3339),
+		ID:                p.ID,
+		Name:              p.Name,
+		Description:       p.Description,
+		IsActive:          p.IsActive,
+		TotalVotesPositon: p.TotalVotesPositon,
+		ValidPercentage:   p.ValidPercentage,
+		CreatedAt:         p.CreatedAt.Format(time.RFC3339),
+		UpdatedAt:         p.UpdatedAt.Format(time.RFC3339),
 	}, nil
 }
 
@@ -76,10 +81,16 @@ func (s *positionServiceImpl) Create(req dto.CreatePositionRequest, userID, user
 		return nil, ErrUnauthorizedAction
 	}
 
+	if req.ValidPercentage < 0 || req.ValidPercentage > 1 {
+		return nil, fmt.Errorf("ValidPercentage debe estar entre 0 y 1")
+	}
+
 	position := models.Position{
-		Name:        req.Name,
-		Description: req.Description,
-		IsActive:    true,
+		Name:              req.Name,
+		Description:       req.Description,
+		IsActive:          true,
+		TotalVotesPositon: req.TotalVotesPositon,
+		ValidPercentage:   req.ValidPercentage,
 	}
 	if req.IsActive != nil {
 		position.IsActive = *req.IsActive
@@ -90,12 +101,14 @@ func (s *positionServiceImpl) Create(req dto.CreatePositionRequest, userID, user
 	}
 
 	return &dto.PositionResponse{
-		ID:          position.ID,
-		Name:        position.Name,
-		Description: position.Description,
-		IsActive:    position.IsActive,
-		CreatedAt:   position.CreatedAt.Format(time.RFC3339),
-		UpdatedAt:   position.UpdatedAt.Format(time.RFC3339),
+		ID:                position.ID,
+		Name:              position.Name,
+		Description:       position.Description,
+		IsActive:          position.IsActive,
+		TotalVotesPositon: position.TotalVotesPositon,
+		ValidPercentage:   position.ValidPercentage,
+		CreatedAt:         position.CreatedAt.Format(time.RFC3339),
+		UpdatedAt:         position.UpdatedAt.Format(time.RFC3339),
 	}, nil
 }
 
@@ -127,12 +140,14 @@ func (s *positionServiceImpl) Update(id string, req dto.UpdatePositionRequest, u
 	}
 
 	return &dto.PositionResponse{
-		ID:          position.ID,
-		Name:        position.Name,
-		Description: position.Description,
-		IsActive:    position.IsActive,
-		CreatedAt:   position.CreatedAt.Format(time.RFC3339),
-		UpdatedAt:   position.UpdatedAt.Format(time.RFC3339),
+		ID:                position.ID,
+		Name:              position.Name,
+		Description:       position.Description,
+		IsActive:          position.IsActive,
+		TotalVotesPositon: position.TotalVotesPositon,
+		ValidPercentage:   position.ValidPercentage,
+		CreatedAt:         position.CreatedAt.Format(time.RFC3339),
+		UpdatedAt:         position.UpdatedAt.Format(time.RFC3339),
 	}, nil
 }
 

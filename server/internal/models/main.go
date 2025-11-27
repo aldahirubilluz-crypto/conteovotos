@@ -43,7 +43,7 @@ type Account struct {
 
 type Candidate struct {
 	Base
-	Name        string  `gorm:"type:varchar(120); unique;not null"`
+	Name        string  `gorm:"type:varchar(120);not null"`
 	Description *string `gorm:"type:text"`
 	ImageID     *string `gorm:"type:uuid"`
 	Image       *Image  `gorm:"foreignKey:ImageID;constraint:OnDelete:SET NULL"`
@@ -62,9 +62,11 @@ type Image struct {
 
 type Position struct {
 	Base
-	Name        string  `gorm:"type:varchar(255);not null;unique"`
-	Description *string `gorm:"type:text"`
-	IsActive    bool    `gorm:"default:true"`
+	Name              string  `gorm:"type:varchar(255);not null;unique"`
+	Description       *string `gorm:"type:text"`
+	IsActive          bool    `gorm:"default:true"`
+	TotalVotesPositon int     `gorm:"not null;default:0"`
+	ValidPercentage   float64 `gorm:"not null;default:0"`
 
 	Candidates []Candidate `gorm:"foreignKey:PositionID"`
 }

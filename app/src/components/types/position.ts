@@ -3,6 +3,8 @@ export interface GetPosition {
     name: string;
     description: string;
     isActive: boolean;
+    totalVotesPositon: number;
+    validPercentage: number;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -10,6 +12,8 @@ export interface GetPosition {
 export interface PosPostion {
     name: string;
     description: string;
+    totalVotesPositon: number;
+    validPercentage: number;
 }
 
 export interface UpdatePostion {

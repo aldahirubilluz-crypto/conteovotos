@@ -30,7 +30,12 @@ export default function FormPosition({ handlerClose, token, onSuccess }: FormPos
 
     const form = useForm<PositionFormValues>({
         resolver: zodResolver(positionSchema),
-        defaultValues: { name: "", description: "" },
+        defaultValues: {
+            name: "",
+            description: "",
+            totalVotesPositon: undefined,
+            validPercentage: undefined 
+        },
     });
 
     const handleSubmit = () => setConfirmOpen(true);
@@ -38,6 +43,9 @@ export default function FormPosition({ handlerClose, token, onSuccess }: FormPos
     const confirmCreate = async () => {
         setIsLoading(true);
         const values = form.getValues();
+        console.log(values);
+
+
         const res = await PostPositionAction(values, token);
 
         if (!res.success || res.status !== 200) {
@@ -53,8 +61,7 @@ export default function FormPosition({ handlerClose, token, onSuccess }: FormPos
         setIsLoading(false);
         form.reset();
         handlerClose();
-        
-        // Llamar al callback para actualizar la tabla
+
         if (onSuccess) {
             onSuccess();
         }
@@ -97,6 +104,54 @@ export default function FormPosition({ handlerClose, token, onSuccess }: FormPos
                                     </FormItem>
                                 )}
                             />
+
+                            <FormField
+                                control={form.control}
+                                name="totalVotesPositon"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Total de Votos</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="number"
+                                                min={0}
+                                                placeholder="0"
+                                                value={field.value ?? ""}  // Muestra vacío si es undefined
+                                                onChange={(e) => {
+                                                    const value = e.target.value === "" ? undefined : Number(e.target.value);
+                                                    field.onChange(value);
+                                                }}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="validPercentage"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Porcentaje Válido (%)</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="number"
+                                                min={0}
+                                                max={100}
+                                                placeholder="0"
+                                                value={field.value ?? ""}  // Muestra vacío si es undefined
+                                                onChange={(e) => {
+                                                    const value = e.target.value === "" ? undefined : Number(e.target.value);
+                                                    field.onChange(value);
+                                                }}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
 
                             <CardFooter className="flex justify-end gap-2 px-0 pb-0">
                                 <Button

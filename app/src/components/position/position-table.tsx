@@ -62,6 +62,8 @@ export default function PositionTable({ data, token, onRefresh }: PropsTable) {
                                 <TableHead>Nombre</TableHead>
                                 <TableHead>Descripción</TableHead>
                                 <TableHead>Activo</TableHead>
+                                <TableHead>Votos Limites</TableHead>
+                                <TableHead>Porcentaje Valido</TableHead>
                                 <TableHead>Creado</TableHead>
                                 <TableHead className="text-right">Acciones</TableHead>
                             </TableRow>
@@ -90,6 +92,17 @@ export default function PositionTable({ data, token, onRefresh }: PropsTable) {
                                             </span>
                                         )}
                                     </TableCell>
+                                    <TableCell>
+                                        <div className="max-w-xs truncate text-sm text-muted-foreground">
+                                            {c.totalVotesPositon}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="max-w-xs truncate text-sm text-muted-foreground">
+                                            {c.validPercentage * 100} %
+                                        </div>
+                                    </TableCell>
+
                                     <TableCell>
                                         <div className="max-w-xs truncate text-sm text-muted-foreground">
                                             {c.createdAt.toString()}

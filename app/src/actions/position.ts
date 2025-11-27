@@ -23,13 +23,17 @@ export async function GetPositionAction(token: string) {
 
 export async function PostPositionAction(values: PosPostion, token: string) {
   try {
+    const payload = {
+      ...values,
+      validPercentage: values.validPercentage / 100,
+    };
     const res = await fetch(`${API}/positions`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(values),
+      body: JSON.stringify(payload),
     });
 
     const json = await res.json();
