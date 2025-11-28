@@ -20,5 +20,7 @@ export interface PosPostion {
 export interface UpdatePostion {
   name: string;
   description: string;
-  isActive: boolean;
+  typePosition: string;
+  totalVotes: number;
+  validPercentage: number;
 }

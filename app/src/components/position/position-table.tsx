@@ -93,7 +93,7 @@ export default function PositionTable({ data, token, onRefresh }: PropsTable) {
                   </TableCell>
                   <TableCell>
                     <div className="max-w-xs truncate text-sm text-muted-foreground">
-                      {c.validPercentage * 100} %
+                      {c.validPercentage} %
                     </div>
                   </TableCell>
 
@@ -109,7 +109,7 @@ export default function PositionTable({ data, token, onRefresh }: PropsTable) {
                         size="sm"
                         onClick={() => onEdit(c)}
                         aria-label={`Editar ${c.name}`}
-                      >
+                        className="text-yellow-600 hover:bg-yellow-400 hover:text-white dark:hover:bg-yellow-400 dark:hover:text-white"                      >
                         <Edit className="h-4 w-4" />
                       </Button>
 
@@ -118,6 +118,7 @@ export default function PositionTable({ data, token, onRefresh }: PropsTable) {
                         size="sm"
                         onClick={() => onDelete(c.id)}
                         aria-label={`Eliminar ${c.name}`}
+                        className="text-destructive hover:bg-red-400 hover:text-white dark:hover:bg-red-400 dark:hover:text-white"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>

@@ -55,7 +55,6 @@ export default function FormPosition({
     setIsLoading(true);
     const values = form.getValues();
     console.log(values);
-    
 
     const res = await PostPositionAction(values, token);
 
@@ -79,7 +78,7 @@ export default function FormPosition({
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50 p-4">
       <Card className="w-full max-w-md px-2 py-8">
         <CardHeader className="text-center">
           <CardTitle>Crear Puesto</CardTitle>

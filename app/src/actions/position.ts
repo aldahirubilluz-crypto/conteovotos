@@ -46,7 +46,6 @@ export async function PostPositionAction(values: PosPostion, token: string) {
       message: json.message,
       data: json.data,
     };
-
   } catch {
     return {
       success: false,
@@ -75,7 +74,6 @@ export async function DeletePositionAction(id: string, token: string) {
       message: json.message,
       data: json.data,
     };
-
   } catch {
     return {
       success: false,
@@ -86,15 +84,26 @@ export async function DeletePositionAction(id: string, token: string) {
   }
 }
 
-export async function UpdatePositionAction(id: string, values: UpdatePostion, token: string) {
+export async function UpdatePositionAction(
+  id: string,
+  values: UpdatePostion,
+  token: string
+) {
   try {
+    const payload = {
+      ...values,
+      name: values.name.toUpperCase(),
+      description: values.description.toUpperCase(),
+      validPercentage: values.validPercentage / 100,
+    };
+
     const res = await fetch(`${API}/positions/${id}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(values),
+      body: JSON.stringify(payload),
     });
 
     const json = await res.json();
@@ -105,7 +114,6 @@ export async function UpdatePositionAction(id: string, values: UpdatePostion, to
       message: json.message,
       data: json.data,
     };
-
   } catch {
     return {
       success: false,

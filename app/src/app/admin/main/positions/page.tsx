@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { GetPositionAction } from "@/actions/position";
 import CreatePosition from "@/components/position/create-position";
@@ -8,50 +8,54 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export default function Page() {
-    const [position, setPosition] = useState<GetPosition[]>([]);
-    const [refreshKey, setRefreshKey] = useState(0);
-    const { data: session, status } = useSession();
+  const [position, setPosition] = useState<GetPosition[]>([]);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const { data: session, status } = useSession();
 
-    useEffect(() => {
-        const loadData = async () => {
-            if (!session?.user?.token) return;
+  useEffect(() => {
+    const loadData = async () => {
+      if (!session?.user?.token) return;
 
-            const res = await GetPositionAction(session.user.token);
+      const res = await GetPositionAction(session.user.token);
 
-            if (res?.data && Array.isArray(res.data)) {
-                setPosition(res.data);
-            } else {
-                setPosition([]);
-                if (res?.error) console.error("Error loading positions:", res.error);
-            }
-        };
-
-        loadData();
-    }, [session, refreshKey]);
-
-    const handleRefresh = () => {
-        setRefreshKey(prev => prev + 1);
+      if (res?.data && Array.isArray(res.data)) {
+        const formatted = res.data.map((p) => ({
+          ...p,
+          validPercentage: p.validPercentage * 100,
+        }));
+        setPosition(formatted);
+      } else {
+        setPosition([]);
+        if (res?.error) console.error("Error loading positions:", res.error);
+      }
     };
 
-    if (status === "loading") {
-        return <div>Cargando...</div>;
-    }
+    loadData();
+  }, [session, refreshKey]);
 
-    if (!session?.user?.token) {
-        return <div>No autorizado</div>;
-    }
+  const handleRefresh = () => {
+    setRefreshKey((prev) => prev + 1);
+  };
 
-    return (
-        <div className="flex flex-col w-full h-auth items-start gap-4">
-            <CreatePosition
-                token={session.user.token}
-                onPositionCreated={handleRefresh}
-            />
-            <PositionTable
-                data={position}
-                token={session.user.token}
-                onRefresh={handleRefresh}
-            />
-        </div>
-    );
+  if (status === "loading") {
+    return <div>Cargando...</div>;
+  }
+
+  if (!session?.user?.token) {
+    return <div>No autorizado</div>;
+  }
+
+  return (
+    <div className="flex flex-col w-full h-auth items-start gap-4">
+      <CreatePosition
+        token={session.user.token}
+        onPositionCreated={handleRefresh}
+      />
+      <PositionTable
+        data={position}
+        token={session.user.token}
+        onRefresh={handleRefresh}
+      />
+    </div>
+  );
 }

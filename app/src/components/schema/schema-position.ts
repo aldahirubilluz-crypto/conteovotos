@@ -22,8 +22,13 @@ export const positionUpdateSchema = z.object({
   name: z.string().min(1, "El nombre es requerido"),
   description: z.string().min(1, "La descripción es requerida"),
 
-  isActive: z.boolean(),
-  totalVotesPositon: z.number().min(0, "Debe ser mayor o igual a 0"),
+  typePosition: z
+    .enum(["AUTORIDAD", "INTEGRANTE"])
+    .refine((val) => val !== undefined, {
+      message: "El tipo de puesto es requerido",
+    }),
+
+  totalVotes: z.number().min(0, "Debe ser mayor o igual a 0"),
 
   validPercentage: z
     .number()
