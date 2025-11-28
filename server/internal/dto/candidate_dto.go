@@ -17,16 +17,17 @@ type UpdateCandidateRequest struct {
 }
 
 type CandidateResponse struct {
-	ID          string          `json:"id"`
-	Name        string          `json:"name"`
-	Description *string         `json:"description,omitempty"`
-	ImageURL    string          `json:"imageUrl,omitempty"`
-	ImageID     *string         `json:"imageId,omitempty"`
-	IsActive    bool            `json:"isActive"`
-	Position    *PositionSimple `json:"position,omitempty"`
+	ID          string         `json:"id"`
+	Name        string         `json:"name"`
+	Description *string        `json:"description,omitempty"`
+	ImageURL    string         `json:"imageUrl,omitempty"`
+	ImageID     *string        `json:"imageId,omitempty"`
+	IsActive    bool           `json:"isActive"`
+	Position    PositionSimple `json:"position,omitempty"`
 }
 
 type PositionSimple struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID           string `json:"id"`
+	Name         string `json:"name"`
+	TypePosition string `json:"typePosition"`
 }

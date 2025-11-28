@@ -21,10 +21,12 @@ export interface UpdateCandidate {
     description: string;
     positionId: string;
     image?: File;
+    isActive: boolean;
 }
 
 
 export interface ProntPosition {
     id: string;
     name: string;
+    typePosition: string;
 }

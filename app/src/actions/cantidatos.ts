@@ -21,7 +21,10 @@ export async function getCantidatosAction(token: string) {
   }
 }
 
-export async function PostCandidatesAction(values: PosCandidate, token: string) {
+export async function PostCandidatesAction(
+  values: PosCandidate,
+  token: string
+) {
   try {
     const formData = new FormData();
     formData.append("name", values.name);
@@ -48,7 +51,6 @@ export async function PostCandidatesAction(values: PosCandidate, token: string) 
       message: json.message,
       data: json.data,
     };
-
   } catch {
     return {
       success: false,
@@ -77,7 +79,6 @@ export async function DeleteCandidatesAction(id: string, token: string) {
       message: json.message,
       data: json.data,
     };
-
   } catch {
     return {
       success: false,
@@ -88,16 +89,30 @@ export async function DeleteCandidatesAction(id: string, token: string) {
   }
 }
 
-
-export async function UpdateCandidateAction(id: string, values: UpdateCandidate, token: string) {
+export async function UpdateCandidateAction(
+  id: string,
+  values: UpdateCandidate,
+  token: string
+) {
   try {
+    const formData = new FormData();
+
+    if (values.name) formData.append("name", values.name.toUpperCase());
+    if (values.description) formData.append("description", values.description.toUpperCase());
+    if (values.positionId) formData.append("positionId", values.positionId);
+    if (values.isActive !== undefined)
+      formData.append("isActive", String(values.isActive));
+
+    if (values.image instanceof File) {
+      formData.append("image", values.image);
+    }
+
     const res = await fetch(`${API}/candidates/${id}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify(values),
+      body: formData,
     });
 
     const json = await res.json();
@@ -108,8 +123,8 @@ export async function UpdateCandidateAction(id: string, values: UpdateCandidate,
       message: json.message,
       data: json.data,
     };
-
-  } catch {
+  } catch (err) {
+    console.error(err);
     return {
       success: false,
       status: 500,

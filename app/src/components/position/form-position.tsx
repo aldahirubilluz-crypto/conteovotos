@@ -92,7 +92,7 @@ export default function FormPosition({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nombre *</FormLabel>
+                    <FormLabel>Nombre</FormLabel>
                     <FormControl>
                       <Input placeholder="Nombre del puesto" {...field} />
                     </FormControl>

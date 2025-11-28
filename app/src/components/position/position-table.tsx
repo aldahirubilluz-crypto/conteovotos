@@ -109,7 +109,8 @@ export default function PositionTable({ data, token, onRefresh }: PropsTable) {
                         size="sm"
                         onClick={() => onEdit(c)}
                         aria-label={`Editar ${c.name}`}
-                        className="text-yellow-600 hover:bg-yellow-400 hover:text-white dark:hover:bg-yellow-400 dark:hover:text-white"                      >
+                        className="text-yellow-600 hover:bg-yellow-400 hover:text-white dark:hover:bg-yellow-400 dark:hover:text-white"
+                      >
                         <Edit className="h-4 w-4" />
                       </Button>
 

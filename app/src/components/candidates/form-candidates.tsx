@@ -44,6 +44,7 @@ export default function FormCandidate({ handlerClose, token, onSuccess }: FormCa
     useEffect(() => {
         (async () => {
             const res = await GetPositionAction(token);
+            
             if (!res.success) return toast.error("Error al cargar puestos");
             setPositions(res.data);
         })();
@@ -93,7 +94,7 @@ export default function FormCandidate({ handlerClose, token, onSuccess }: FormCa
     };
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50 p-4">
             <Card className="w-full max-w-lg px-2 py-8">
                 <CardHeader className="text-center">
                     <CardTitle className="text-lg text-foreground">Registrar Candidato</CardTitle>

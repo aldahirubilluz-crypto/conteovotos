@@ -39,9 +39,10 @@ func mapModelToResponse(c models.Candidate) dto.CandidateResponse {
 	}
 
 	if c.Position != nil {
-		response.Position = &dto.PositionSimple{
-			ID:   c.Position.ID,
-			Name: c.Position.Name,
+		response.Position = dto.PositionSimple{
+			ID:           c.Position.ID,
+			Name:         c.Position.Name,
+			TypePosition: string(c.Position.TypePosition),
 		}
 	}
 
