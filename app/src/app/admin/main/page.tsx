@@ -40,6 +40,9 @@ export default function Page() {
   const [candidates, setCandidates] = useState<GetCantidatos[]>([]);
   const [activeTab, setActiveTab] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedTypeVote, setSelectedTypeVote] = useState<
+    "PERSONAL" | "PUBLICO"
+  >("PERSONAL");
 
   const { data: session, status } = useSession();
 
@@ -54,6 +57,8 @@ export default function Page() {
       const persons = await getCantidatosAction(session.user.token);
       const cargos = await GetPositionAction(session.user.token);
 
+      console.log(cargos);
+
       if (Array.isArray(persons?.data)) setCandidates(persons.data);
       if (Array.isArray(cargos?.data)) {
         setPositions(cargos.data);
@@ -64,6 +69,9 @@ export default function Page() {
 
   const onSubmit = async (values: FormValuesRegister) => {
     if (!session?.user?.token) return toast.error("Token inválido");
+
+    const currentPosition = positions.find((p) => p.id === activeTab);
+    if (!currentPosition) return toast.error("Posición no encontrada");
 
     const currentCandidates = candidates.filter(
       (c) => c.position?.id === activeTab && c.isActive
@@ -80,12 +88,18 @@ export default function Page() {
       return toast.warning("No hay candidatos en esta posición");
     }
 
+    // Cambio aquí: AUTORIDAD usa selectedTypeVote, INTEGRANTE usa "PUBLICO"
+    const typeVote =
+      currentPosition.typePosition === "AUTORIDAD"
+        ? selectedTypeVote
+        : "PUBLICO";
+
     setIsSubmitting(true);
     let success = 0;
 
     for (const { candidateId, totalVotes } of votesToSubmit) {
       const res = await PostRecordAction(
-        { mesa: values.mesa, candidateId, totalVotes },
+        { mesa: values.mesa, candidateId, totalVotes, typeVote },
         session.user.token
       );
 
@@ -98,9 +112,7 @@ export default function Page() {
     }
 
     toast.success(
-      `${success} registro(s) completados para ${
-        positions.find((p) => p.id === activeTab)?.name
-      }`
+      `${success} registro(s) completados para ${currentPosition.name} - ${typeVote}`
     );
 
     const currentVotes = { ...values.votes };
@@ -110,7 +122,7 @@ export default function Page() {
 
     form.setValue("votes", currentVotes);
     form.setValue("mesa", "");
-
+    setSelectedTypeVote("PERSONAL");
     setIsSubmitting(false);
   };
 
@@ -154,6 +166,8 @@ export default function Page() {
                 (c) => c.position?.id === p.id && c.isActive
               );
 
+              const isAutoridad = p.typePosition === "AUTORIDAD";
+
               return (
                 <TabsContent key={p.id} value={p.id} className="pt-4 space-y-4">
                   <Form {...form}>
@@ -182,6 +196,56 @@ export default function Page() {
                           </FormItem>
                         )}
                       />
+
+                      {isAutoridad && (
+                        <div className="space-y-3">
+                          <FormLabel className="text-base font-semibold">
+                            Tipo de Voto *
+                          </FormLabel>
+
+                          <div className="flex gap-3">
+                            <Button
+                              type="button"
+                              variant={
+                                selectedTypeVote === "PERSONAL"
+                                  ? "default"
+                                  : "outline"
+                              }
+                              onClick={() => setSelectedTypeVote("PERSONAL")}
+                              className={`
+          px-6 py-2 rounded-xl shadow-sm transition-all
+          ${
+            selectedTypeVote === "PERSONAL"
+              ? "bg-green-500 hover:bg-green-600 text-white"
+              : "border border-green-700 text-green-900 hover:bg-green-50"
+          }
+        `}
+                            >
+                              PERSONAL
+                            </Button>
+
+                            <Button
+                              type="button"
+                              variant={
+                                selectedTypeVote === "PUBLICO"
+                                  ? "default"
+                                  : "outline"
+                              }
+                              onClick={() => setSelectedTypeVote("PUBLICO")}
+                              className={`
+          px-6 py-2 rounded-xl shadow-sm transition-all
+          ${
+            selectedTypeVote === "PUBLICO"
+              ? "bg-blue-500 hover:bg-blue-600 text-white"
+              : "border border-blue-700 text-blue-900 hover:bg-blue-50"
+          }
+        `}
+                            >
+                              ESTUDIANTES
+                            </Button>
+                          </div>
+                        </div>
+                      )}
 
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {positionCandidates.map((c) => (

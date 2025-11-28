@@ -70,12 +70,12 @@ export default function Page() {
     ).values()
   );
 
-  console.log(candidates);
-
   const handleGenerarReporte = async () => {
     if (!selectedCandidate) return;
 
     try {
+      console.log("Alda 1", selectedCandidate);
+      
       const base64PDF = await generarReportePDF(selectedCandidate);
       const binaryString = atob(base64PDF);
       const bytes = new Uint8Array(binaryString.length);

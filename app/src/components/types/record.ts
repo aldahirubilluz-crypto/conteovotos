@@ -4,7 +4,7 @@ export interface GetRecord {
   candidateName: string;
   mesa: string;
   totalVotes: string;
-
+  typeVote: string;
   position: PositionSimple;
 }
 
@@ -18,4 +18,5 @@ export interface PosRecord {
   mesa: string;
   candidateId: string;
   totalVotes: number;
+  typeVote: "PERSONAL" | "PUBLICO";
 }

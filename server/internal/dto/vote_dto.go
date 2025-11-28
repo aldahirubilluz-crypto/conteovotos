@@ -4,6 +4,7 @@ type CreateVoteRequest struct {
 	Mesa        string `json:"mesa" validate:"required,min=0"`
 	CandidateID string `json:"candidateId" validate:"required"`
 	TotalVotes  int    `json:"totalVotes" validate:"required,min=0"`
+	TypeVote    string `json:"typeVote" validate:"required"`
 }
 
 type VoteResponse struct {
@@ -12,5 +13,6 @@ type VoteResponse struct {
 	CandidateID   string         `json:"candidateId"`
 	CandidateName string         `json:"candidateName,omitempty"`
 	TotalVotes    int            `json:"totalVotes"`
+	TypeVote      string         `json:"typeVote" validate:"required"`
 	Position      PositionSimple `json:"position,omitempty"`
 }

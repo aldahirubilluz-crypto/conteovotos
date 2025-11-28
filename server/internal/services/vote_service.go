@@ -39,6 +39,7 @@ func (s *voteServiceImpl) GetAll() ([]dto.VoteResponse, error) {
 			CandidateID:   v.CandidateID,
 			CandidateName: v.Candidate.Name,
 			TotalVotes:    v.Vote,
+			TypeVote:      string(v.TypeVote),
 		}
 
 		if v.Candidate.Position != nil {
@@ -58,7 +59,6 @@ func (s *voteServiceImpl) GetAll() ([]dto.VoteResponse, error) {
 func (s *voteServiceImpl) GetByCandidate(candidateID string) ([]dto.VoteResponse, error) {
 	var votes []models.Vote
 
-	// 👉 IMPORTANTE: Preload completo
 	if err := s.db.Preload("Candidate.Position").
 		Where("candidate_id = ?", candidateID).
 		Find(&votes).Error; err != nil {
@@ -74,9 +74,9 @@ func (s *voteServiceImpl) GetByCandidate(candidateID string) ([]dto.VoteResponse
 			CandidateID:   v.CandidateID,
 			CandidateName: v.Candidate.Name,
 			TotalVotes:    v.Vote,
+			TypeVote:      string(v.TypeVote),
 		}
 
-		// Si el candidato tiene un puesto, lo agregamos
 		if v.Candidate.Position != nil {
 			item.Position = dto.PositionSimple{
 				ID:           v.Candidate.Position.ID,
@@ -104,6 +104,17 @@ func (s *voteServiceImpl) Create(req dto.CreateVoteRequest, userID, userRole str
 		return nil, ErrInvalidVoteCount
 	}
 
+	validTypes := map[models.TypeVote]bool{
+		models.TVpersonal: true,
+		models.TVpublico:  true,
+	}
+
+	tv := models.TypeVote(req.TypeVote)
+
+	if !validTypes[tv] {
+		return nil, fmt.Errorf("typeVote inválido: debe ser PERSONAL o PUBLICO")
+	}
+
 	var candidate models.Candidate
 	if err := s.db.First(&candidate, "id = ?", req.CandidateID).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -125,6 +136,7 @@ func (s *voteServiceImpl) Create(req dto.CreateVoteRequest, userID, userRole str
 	vote := models.Vote{
 		Mesa:        req.Mesa,
 		CandidateID: req.CandidateID,
+		TypeVote:    tv,
 		Vote:        req.TotalVotes,
 	}
 
@@ -132,15 +144,27 @@ func (s *voteServiceImpl) Create(req dto.CreateVoteRequest, userID, userRole str
 		return nil, err
 	}
 
-	if err := s.db.Preload("Candidate").First(&vote, "id = ?", vote.ID).Error; err != nil {
+	if err := s.db.Preload("Candidate.Position").
+		First(&vote, "id = ?", vote.ID).Error; err != nil {
 		return nil, err
 	}
 
-	return &dto.VoteResponse{
+	resp := dto.VoteResponse{
 		ID:            vote.ID,
 		Mesa:          vote.Mesa,
 		CandidateID:   vote.CandidateID,
 		CandidateName: vote.Candidate.Name,
 		TotalVotes:    vote.Vote,
-	}, nil
+		TypeVote:      string(vote.TypeVote),
+	}
+
+	if vote.Candidate.Position != nil {
+		resp.Position = dto.PositionSimple{
+			ID:           vote.Candidate.Position.ID,
+			Name:         vote.Candidate.Position.Name,
+			TypePosition: string(vote.Candidate.Position.TypePosition),
+		}
+	}
+
+	return &resp, nil
 }

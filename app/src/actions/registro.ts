@@ -34,7 +34,7 @@ export async function getOneRecordAction(Id: string) {
     if (!res.ok)
       return {
         success: false,
-        error: json.message || "Error al obtener usuarios",
+        error: json.message || "Error al obtener los registros",
       };
     return { success: true, data: json.data ?? [] };
   } catch (error) {
@@ -73,8 +73,15 @@ export async function PostRecordAction(values: PosRecord, token: string) {
 
 export async function generarReportePDF(candidateID: string) {
   try {
-    const res = getOneRecordAction(candidateID);
-    const pdfDocument = CandidateReportPDF(res);
+    const res = await getOneRecordAction(candidateID);
+
+    if (!res.success) throw new Error("No se pudieron obtener registros");
+
+    const records = res.data;
+
+    const pdfDocument = CandidateReportPDF({
+      candidateRecords: records,
+    });
 
     const buffer = await renderToBuffer(pdfDocument);
 

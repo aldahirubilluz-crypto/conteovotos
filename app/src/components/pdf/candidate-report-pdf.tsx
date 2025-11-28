@@ -1,163 +1,347 @@
-// src/components/pdf/candidate-report-pdf.tsx
 import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
-import { GetRecord } from "@/components/types/record";
+import { GetRecord } from "../types/record";
 
 const styles = StyleSheet.create({
   page: {
     padding: 30,
-    fontSize: 11,
+    fontSize: 10,
     fontFamily: "Helvetica",
+    backgroundColor: "#ffffff",
   },
+
+  // Header Section
   header: {
-    marginBottom: 20,
-    borderBottom: 2,
-    borderBottomColor: "#2563eb",
+    marginBottom: 15,
     paddingBottom: 10,
+    borderBottom: 2,
+    borderBottomColor: "#1e40af",
   },
+
   title: {
     fontSize: 18,
     fontWeight: "bold",
     color: "#1e40af",
-    marginBottom: 5,
+    marginBottom: 4,
   },
+
   subtitle: {
-    fontSize: 10,
+    fontSize: 9,
     color: "#64748b",
   },
+
+  // Info Section
+  infoSection: {
+    marginTop: 12,
+    marginBottom: 15,
+    padding: 10,
+    backgroundColor: "#f8fafc",
+    borderRadius: 4,
+    borderLeft: 3,
+    borderLeftColor: "#3b82f6",
+  },
+
+  sectionTitle: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: "#1e40af",
+    marginBottom: 8,
+  },
+
+  infoRow: {
+    flexDirection: "row",
+    marginBottom: 4,
+  },
+
+  infoLabel: {
+    width: "30%",
+    fontSize: 9,
+    fontWeight: "bold",
+    color: "#475569",
+  },
+
+  infoValue: {
+    width: "70%",
+    fontSize: 9,
+    color: "#1e293b",
+  },
+
+  // Table Section
+  tableSection: {
+    marginTop: 15,
+  },
+
   table: {
     width: "100%",
-    marginTop: 10,
+    marginTop: 8,
   },
+
   tableHeader: {
     flexDirection: "row",
-    backgroundColor: "#2563eb",
-    borderTopLeftRadius: 4,
-    borderTopRightRadius: 4,
+    backgroundColor: "#1e40af",
+    borderTopLeftRadius: 3,
+    borderTopRightRadius: 3,
+    paddingVertical: 8,
   },
-  tableRow: {
-    flexDirection: "row",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e2e8f0",
-    minHeight: 30,
-    alignItems: "center",
-  },
-  tableRowAlt: {
-    backgroundColor: "#f8fafc",
-  },
-  colMesa: {
-    width: "50%",
-    padding: 8,
-    textAlign: "left",
-  },
-  colVotos: {
-    width: "50%",
-    padding: 8,
-    textAlign: "center",
-  },
+
   headerText: {
     color: "#ffffff",
     fontWeight: "bold",
-    fontSize: 12,
-  },
-  cellText: {
-    fontSize: 11,
-  },
-  footer: {
-    position: "absolute",
-    bottom: 30,
-    left: 30,
-    right: 30,
-    textAlign: "center",
-    color: "#64748b",
     fontSize: 9,
-    borderTop: 1,
-    borderTopColor: "#e2e8f0",
-    paddingTop: 10,
+    textAlign: "center",
   },
-  summary: {
-    marginTop: 20,
-    padding: 15,
-    backgroundColor: "#f0f9ff",
+
+  tableBody: {
+    borderLeft: 1,
+    borderRight: 1,
+    borderBottom: 1,
+    borderColor: "#cbd5e1",
+  },
+
+  row: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#e2e8f0",
+    minHeight: 24,
+    alignItems: "center",
+  },
+
+  rowAlt: {
+    backgroundColor: "#f8fafc",
+  },
+
+  cell: {
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    fontSize: 9,
+    textAlign: "center",
+    color: "#334155",
+  },
+
+  cellLeft: {
+    textAlign: "left",
+  },
+
+  // Summary Section
+  summarySection: {
+    marginTop: 15,
+    padding: 12,
+    backgroundColor: "#dbeafe",
     borderRadius: 4,
     borderLeft: 4,
     borderLeftColor: "#2563eb",
   },
-  summaryText: {
-    fontSize: 12,
+
+  summaryTitle: {
+    fontSize: 11,
     fontWeight: "bold",
     color: "#1e40af",
+    marginBottom: 8,
+  },
+
+  summaryRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 5,
+    paddingBottom: 5,
+    borderBottom: 1,
+    borderBottomColor: "#bfdbfe",
+  },
+
+  summaryRowLast: {
+    borderBottom: 0,
+    paddingTop: 5,
+    marginTop: 3,
+  },
+
+  summaryLabel: {
+    fontSize: 9.5,
+    color: "#475569",
+    fontWeight: "bold",
+  },
+
+  summaryValue: {
+    fontSize: 9.5,
+    color: "#1e40af",
+    fontWeight: "bold",
+  },
+
+  summaryTotal: {
+    fontSize: 11,
+    color: "#1e40af",
+    fontWeight: "bold",
+  },
+
+  footer: {
+    position: "absolute",
+    bottom: 25,
+    left: 30,
+    right: 30,
+    paddingTop: 10,
+    borderTop: 1,
+    borderTopColor: "#e2e8f0",
+  },
+
+  footerText: {
+    textAlign: "center",
+    color: "#64748b",
+    fontSize: 7.5,
+    marginBottom: 2,
   },
 });
 
-interface Props {
+interface PropsRecords {
   candidateRecords: GetRecord[];
-  candidateName: string;
 }
 
-export default function CandidateReportPDF({ candidateRecords, candidateName }: Props) {
-  // Calcular el total de votos - especificar el tipo del acumulador
-  const totalVotos = candidateRecords.reduce<number>((sum, r) => sum + Number(r.totalVotes), 0);
-  
-  // Fecha actual
-  const fecha = new Date().toLocaleDateString("es-PE", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+export default function CandidateReportPDF({ candidateRecords }: PropsRecords) {
+  if (!candidateRecords || candidateRecords.length === 0) {
+    return (
+      <Document>
+        <Page size="A4" style={styles.page}>
+          <Text>No hay datos disponibles</Text>
+        </Page>
+      </Document>
+    );
+  }
+
+  const first = candidateRecords[0];
+  const candidateName = first?.candidateName || "No especificado";
+  const positionName = first?.position?.name || "No especificado";
+  const typePosition =
+    first?.position?.typePosition === "AUTORIDAD"
+      ? "AUTORIDAD ADMINISTRATICA"
+      : "ORGANO EJECUTIVO";
+
+  const totalGeneral = candidateRecords.reduce(
+    (sum, r) => sum + Number(r.totalVotes || 0),
+    0
+  );
+
+  const totalPersonal = candidateRecords
+    .filter((r) => r.typeVote === "PERSONAL")
+    .reduce((sum, r) => sum + Number(r.totalVotes || 0), 0);
+
+  const totalPublico = candidateRecords
+    .filter((r) => r.typeVote === "PUBLICO")
+    .reduce((sum, r) => sum + Number(r.totalVotes || 0), 0);
+
+  const totalMesas = candidateRecords.length;
+  const fechaGeneracion = new Date().toLocaleString("es-PE", {
+    dateStyle: "long",
+    timeStyle: "short",
   });
 
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Reporte de Resultados Electorales</Text>
-          <Text style={styles.subtitle}>
-            Candidato: {candidateName} | Fecha: {fecha}
-          </Text>
+          <Text style={styles.title}>Reporte de Votación por Candidato</Text>
+          <Text style={styles.subtitle}>Generado el {fechaGeneracion}</Text>
         </View>
 
-        {/* Tabla */}
-        <View style={styles.table}>
-          {/* Header de la tabla */}
-          <View style={styles.tableHeader}>
-            <View style={styles.colMesa}>
-              <Text style={styles.headerText}>Mesa Electoral</Text>
-            </View>
-            <View style={styles.colVotos}>
-              <Text style={styles.headerText}>Votos Obtenidos</Text>
-            </View>
+        <View style={styles.infoSection}>
+          <Text style={styles.sectionTitle}>Información del Candidato</Text>
+
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Nombre Completo:</Text>
+            <Text style={styles.infoValue}>{candidateName}</Text>
           </View>
 
-          {/* Filas de datos */}
-          {candidateRecords.map((record, index) => (
-            <View
-              key={record.id}
-              style={[
-                styles.tableRow,
-                index % 2 === 1 ? styles.tableRowAlt : {},
-              ]}
-            >
-              <View style={styles.colMesa}>
-                <Text style={styles.cellText}>{record.mesa}</Text>
-              </View>
-              <View style={styles.colVotos}>
-                <Text style={styles.cellText}>{record.totalVotes}</Text>
-              </View>
-            </View>
-          ))}
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Cargo Postulado:</Text>
+            <Text style={styles.infoValue}>{positionName}</Text>
+          </View>
+
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Tipo de Cargo:</Text>
+            <Text style={styles.infoValue}>{typePosition}</Text>
+          </View>
         </View>
 
-        {/* Resumen */}
-        <View style={styles.summary}>
-          <Text style={styles.summaryText}>
-            {`Total de votos: ${totalVotos} | Total de mesas: ${candidateRecords.length}`}
+        <View style={styles.tableSection}>
+          <Text style={styles.sectionTitle}>Detalle de Votación por Mesa</Text>
+
+          <View style={styles.table}>
+            <View style={styles.tableHeader}>
+              <Text style={[styles.headerText, { width: "12%" }]}>N°</Text>
+              <Text style={[styles.headerText, { width: "43%" }]}>
+                Mesa Electoral
+              </Text>
+              <Text style={[styles.headerText, { width: "25%" }]}>
+                Tipo de Voto
+              </Text>
+              <Text style={[styles.headerText, { width: "20%" }]}>Votos</Text>
+            </View>
+
+            <View style={styles.tableBody}>
+              {candidateRecords.map((record, index) => (
+                <View
+                  key={record.id}
+                  style={[styles.row, index % 2 === 1 ? styles.rowAlt : {}]}
+                >
+                  <Text style={[styles.cell, { width: "12%" }]}>
+                    {index + 1}
+                  </Text>
+
+                  <Text
+                    style={[styles.cell, styles.cellLeft, { width: "43%" }]}
+                  >
+                    {record.mesa}
+                  </Text>
+
+                  <Text style={[styles.cell, { width: "25%" }]}>
+                    {record.typeVote === "PERSONAL"
+                      ? "Personal"
+                      : "Estudiantes"}
+                  </Text>
+
+                  <Text
+                    style={[styles.cell, { width: "20%", fontWeight: "bold" }]}
+                  >
+                    {record.totalVotes}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.summarySection}>
+          <Text style={styles.summaryTitle}>Resumen de Resultados</Text>
+
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>Total de Mesas:</Text>
+            <Text style={styles.summaryValue}>{totalMesas}</Text>
+          </View>
+
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>Votos Personal:</Text>
+            <Text style={styles.summaryValue}>{totalPersonal}</Text>
+          </View>
+
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>Votos Estudiantes:</Text>
+            <Text style={styles.summaryValue}>{totalPublico}</Text>
+          </View>
+
+          <View style={[styles.summaryRow, styles.summaryRowLast]}>
+            <Text style={[styles.summaryLabel, { fontSize: 11 }]}>
+              TOTAL GENERAL:
+            </Text>
+            <Text style={styles.summaryTotal}>{totalGeneral} votos</Text>
+          </View>
+        </View>
+
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>
+            Documento generado automáticamente por el Sistema de Conteo
+            Electoral
+          </Text>
+          <Text style={styles.footerText}>
+            Este documento tiene validez oficial para efectos de auditoría y
+            verificación
           </Text>
         </View>
-
-        {/* Footer */}
-        <Text style={styles.footer}>
-          {`Documento generado el ${new Date().toLocaleString("es-PE")}`}
-        </Text>
       </Page>
     </Document>
   );

@@ -5,16 +5,15 @@ import (
 )
 
 type Rol string
-
-const (
-	RolAdmin Rol = "ADMIN"
-)
-
 type TypePositions string
+type TypeVote string
 
 const (
+	RolAdmin   Rol           = "ADMIN"
 	TAposition TypePositions = "AUTORIDAD"
 	TIposition TypePositions = "INTEGRANTE"
+	TVpersonal TypeVote      = "PERSONAL"
+	TVpublico  TypeVote      = "PUBLICO"
 )
 
 type Base struct {
@@ -83,5 +82,6 @@ type Vote struct {
 	Mesa        string    `gorm:"type:varchar(120);not null"`
 	CandidateID string    `gorm:"type:uuid;not null"`
 	Candidate   Candidate `gorm:"foreignKey:CandidateID;constraint:OnDelete:CASCADE"`
+	TypeVote    TypeVote  `gorm:"not null,default:PUBLICO"`
 	Vote        int       `gorm:"not null;default:0"`
 }
