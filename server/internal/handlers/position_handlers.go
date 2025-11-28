@@ -16,43 +16,13 @@ func NewPositionHandler(service services.PositionService) *PositionHandler {
 }
 
 func (h *PositionHandler) GetAll(c fiber.Ctx) (interface{}, string, error) {
-	userID := c.Locals("userID")
-	if userID == nil {
-		return nil, "Usuario no autenticado", fiber.NewError(fiber.StatusUnauthorized, "Token inválido")
-	}
-
-	userRole := c.Locals("userRole")
-	if userRole == nil {
-		return nil, "Rol no encontrado", fiber.NewError(fiber.StatusUnauthorized, "Rol no disponible")
-	}
-
-	positions, err := h.service.GetAll(userID.(string), userRole.(string))
+	positions, err := h.service.GetAll()
 	if err != nil {
 		logger.Log.Errorf("❌ GetAll positions failed: %v", err)
 		return nil, err.Error(), fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
 	return positions, "Positions obtenidas correctamente", nil
-}
-
-func (h *PositionHandler) GetOne(c fiber.Ctx) (interface{}, string, error) {
-	id := c.Params("id")
-	userID := c.Locals("userID")
-	if userID == nil {
-		return nil, "Usuario no autenticado", fiber.NewError(fiber.StatusUnauthorized, "Token inválido")
-	}
-	userRole := c.Locals("userRole")
-	if userRole == nil {
-		return nil, "Rol no encontrado", fiber.NewError(fiber.StatusUnauthorized, "Rol no disponible")
-	}
-
-	position, err := h.service.GetOne(id, userID.(string), userRole.(string))
-	if err != nil {
-		logger.Log.Errorf("❌ GetOne position failed: %v", err)
-		return nil, err.Error(), fiber.NewError(fiber.StatusBadRequest, err.Error())
-	}
-
-	return position, "Position obtenida correctamente", nil
 }
 
 func (h *PositionHandler) Create(c fiber.Ctx) (interface{}, string, error) {

@@ -10,18 +10,16 @@ import (
 )
 
 func RegisterVoteRoutes(app *fiber.App, db *gorm.DB) {
-	
+
 	voteService := services.NewVoteService(db)
 	voteHandler := handlers.NewVoteHandler(voteService)
 
+	app.Get("/votes", httpwrap.Wrap(voteHandler.GetAll))
+	app.Get("/votes/candidate/:candidateId", httpwrap.Wrap(voteHandler.GetByCandidate))
+
 	voteGroup := app.Group("/votes", middleware.AuthRequired())
 	{
-		voteGroup.Get("/", httpwrap.Wrap(voteHandler.GetAll))
-		voteGroup.Get("/:id", httpwrap.Wrap(voteHandler.GetOne))
 		voteGroup.Post("/", httpwrap.Wrap(voteHandler.Create))
-		voteGroup.Put("/:id", httpwrap.Wrap(voteHandler.Update))
-		voteGroup.Patch("/:id", httpwrap.Wrap(voteHandler.Update))
-		voteGroup.Delete("/:id", httpwrap.Wrap(voteHandler.Delete))
 	}
 
 	println("✅ Vote routes registered")

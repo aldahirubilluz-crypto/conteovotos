@@ -6,10 +6,6 @@ type CreateVoteRequest struct {
 	TotalVotes  int    `json:"totalVotes" validate:"required,min=0"`
 }
 
-type UpdateVoteRequest struct {
-	TotalVotes *int `json:"totalVotes,omitempty" validate:"omitempty,min=0"`
-}
-
 type VoteResponse struct {
 	ID            string `json:"id"`
 	Mesa          string `json:"mesa"`

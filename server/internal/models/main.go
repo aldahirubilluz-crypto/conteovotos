@@ -10,6 +10,13 @@ const (
 	RolAdmin Rol = "ADMIN"
 )
 
+type TypePositions string
+
+const (
+	TAposition TypePositions = "AUTORIDAD"
+	TIposition TypePositions = "INTEGRANTE"
+)
+
 type Base struct {
 	ID        string    `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
 	CreatedAt time.Time `gorm:"autoCreateTime"`
@@ -62,11 +69,11 @@ type Image struct {
 
 type Position struct {
 	Base
-	Name              string  `gorm:"type:varchar(255);not null;unique"`
-	Description       *string `gorm:"type:text"`
-	IsActive          bool    `gorm:"default:true"`
-	TotalVotesPositon int     `gorm:"not null;default:0"`
-	ValidPercentage   float64 `gorm:"not null;default:0"`
+	Name            string        `gorm:"type:varchar(255);not null;unique"`
+	Description     *string       `gorm:"type:text"`
+	TypePosition    TypePositions `gorm:"not null,default:INTEGRANTE"`
+	TotalVotes      int           `gorm:"not null;default:0"`
+	ValidPercentage float64       `gorm:"not null;default:0"`
 
 	Candidates []Candidate `gorm:"foreignKey:PositionID"`
 }
@@ -76,5 +83,5 @@ type Vote struct {
 	Mesa        string    `gorm:"type:varchar(120);not null"`
 	CandidateID string    `gorm:"type:uuid;not null"`
 	Candidate   Candidate `gorm:"foreignKey:CandidateID;constraint:OnDelete:CASCADE"`
-	TotalVotes  int       `gorm:"not null;default:0"`
+	Vote        int       `gorm:"not null;default:0"`
 }

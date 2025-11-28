@@ -1,4 +1,3 @@
-// server/internal/routes/candidate_routes.go
 package routes
 
 import (
@@ -12,18 +11,18 @@ import (
 
 func RegisterCandidateRoutes(app *fiber.App, db *gorm.DB) {
 	candidateService := services.NewCandidateService(db)
-	imageService := services.NewImageService(db)                              
-	candidateHandler := handlers.NewCandidateHandler(candidateService, imageService) 
+	imageService := services.NewImageService(db)
+	candidateHandler := handlers.NewCandidateHandler(candidateService, imageService)
+
+	app.Get("/candidates", httpwrap.Wrap(candidateHandler.GetAll))
 
 	candidateGroup := app.Group("/candidates", middleware.AuthRequired())
 	{
-		candidateGroup.Get("/", httpwrap.Wrap(candidateHandler.GetAll))
 		candidateGroup.Get("/:id", httpwrap.Wrap(candidateHandler.GetOne))
 		candidateGroup.Post("/", httpwrap.Wrap(candidateHandler.Create))
-		candidateGroup.Put("/:id", httpwrap.Wrap(candidateHandler.Update))
 		candidateGroup.Patch("/:id", httpwrap.Wrap(candidateHandler.Update))
 		candidateGroup.Delete("/:id", httpwrap.Wrap(candidateHandler.Delete))
-        
+
 		candidateGroup.Get("/:id/position", httpwrap.Wrap(candidateHandler.GetPosition))
 	}
 	println("✅ Candidate routes registered")

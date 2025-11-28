@@ -10,7 +10,7 @@ import (
 
 type CandidateService interface {
 	Create(req dto.CreateCandidateRequest, userID, userRole string) (*dto.CandidateResponse, error)
-	GetAll(userID, userRole string) ([]dto.CandidateResponse, error)
+	GetAll() ([]dto.CandidateResponse, error)
 	GetOne(id, userID, userRole string) (*dto.CandidateResponse, error)
 	Update(id string, req dto.UpdateCandidateRequest, userID, userRole string) (*dto.CandidateResponse, error)
 	Delete(id, userID, userRole string) error
@@ -48,7 +48,7 @@ func mapModelToResponse(c models.Candidate) dto.CandidateResponse {
 	return response
 }
 
-func (s *candidateServiceImpl) GetAll(userID, userRole string) ([]dto.CandidateResponse, error) {
+func (s *candidateServiceImpl) GetAll() ([]dto.CandidateResponse, error) {
 	var candidates []models.Candidate
 
 	if err := s.db.Preload("Position").Preload("Image").Find(&candidates).Error; err != nil {

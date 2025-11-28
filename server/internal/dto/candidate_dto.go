@@ -1,4 +1,3 @@
-// server/internal/dto/candidate_dto.go
 package dto
 
 type CreateCandidateRequest struct {
@@ -21,8 +20,8 @@ type CandidateResponse struct {
 	ID          string          `json:"id"`
 	Name        string          `json:"name"`
 	Description *string         `json:"description,omitempty"`
-	ImageURL    string          `json:"imageUrl,omitempty"` 
-	ImageID     *string         `json:"imageId,omitempty"` 
+	ImageURL    string          `json:"imageUrl,omitempty"`
+	ImageID     *string         `json:"imageId,omitempty"`
 	IsActive    bool            `json:"isActive"`
 	Position    *PositionSimple `json:"position,omitempty"`
 }
@@ -30,8 +29,4 @@ type CandidateResponse struct {
 type PositionSimple struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
-}
-
-type AssignPositionRequest struct {
-	PositionID string `json:"positionId" validate:"required"`
 }

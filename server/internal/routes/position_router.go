@@ -13,10 +13,10 @@ func RegisterPositionRoutes(app *fiber.App, db *gorm.DB) {
 	positionService := services.NewPositionService(db)
 	positionHandler := handlers.NewPositionHandler(positionService)
 
+	app.Get("/positions", httpwrap.Wrap(positionHandler.GetAll))
+
 	positionGroup := app.Group("/positions", middleware.AuthRequired())
 	{
-		positionGroup.Get("/", httpwrap.Wrap(positionHandler.GetAll))
-		positionGroup.Get("/:id", httpwrap.Wrap(positionHandler.GetOne))
 		positionGroup.Post("/", httpwrap.Wrap(positionHandler.Create))
 		positionGroup.Patch("/:id", httpwrap.Wrap(positionHandler.Update))
 		positionGroup.Delete("/:id", httpwrap.Wrap(positionHandler.Delete))
