@@ -25,6 +25,8 @@ export async function PostPositionAction(values: PosPostion, token: string) {
   try {
     const payload = {
       ...values,
+      name: values.name.toUpperCase(),
+      description: values.description.toUpperCase(),
       validPercentage: values.validPercentage / 100,
     };
     const res = await fetch(`${API}/positions`, {

@@ -131,7 +131,7 @@ export default function LoginForm() {
         </CardHeader>
 
         <CardContent className="relative z-10">
-          <form onSubmit={onSubmit} className="space-y-6">
+          <form onSubmit={onSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Correo electrónico</Label>
 
@@ -152,15 +152,8 @@ export default function LoginForm() {
             </div>
 
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Contraseña</Label>
-                <a
-                  href="/auth/identify"
-                  className="text-sm font-medium text-primary hover:underline"
-                >
-                  ¿Olvidaste tu contraseña?
-                </a>
-              </div>
+              <Label htmlFor="email">Contraseña</Label>
+
               <div className="relative">
                 <Lock className="absolute left-3 inset-y-0 my-auto h-4 w-4 text-muted-foreground" />
 
@@ -194,10 +187,10 @@ export default function LoginForm() {
 
             <Button
               type="submit"
-              className="w-full h-12 text-base font-semibold mt-8 bg-linear-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-200 group"
+              className="w-full h-12 text-base font-semibold bg-linear-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-200 group"
               disabled={isLoading}
             >
-              <span className="flex items-center justify-center gap-2">
+              <span className="flex items-center justify-center gap-2 text-white">
                 {isLoading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
