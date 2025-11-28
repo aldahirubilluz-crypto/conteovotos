@@ -1,16 +1,33 @@
-"use server"
+"use server";
 
 import CandidateReportPDF from "@/components/pdf/candidate-report-pdf";
-import { GetRecord, PosRecord } from "@/components/types/record";
+import { PosRecord } from "@/components/types/record";
 import { renderToBuffer } from "@react-pdf/renderer";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
-export async function getRecordAction(token: string) {
+export async function getRecordAction() {
   try {
     const res = await fetch(`${API}/votes/`, {
       method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    });
+    const json = await res.json();
+    if (!res.ok)
+      return {
+        success: false,
+        error: json.message || "Error al obtener usuarios",
+      };
+    return { success: true, data: json.data ?? [] };
+  } catch (error) {
+    return { success: false, error };
+  }
+}
+
+export async function getOneRecordAction(Id: string) {
+  try {
+    const res = await fetch(`${API}/votes/candidate/${Id}`, {
+      method: "GET",
       cache: "no-store",
     });
     const json = await res.json();
@@ -44,7 +61,6 @@ export async function PostRecordAction(values: PosRecord, token: string) {
       message: json.message,
       data: json.data,
     };
-
   } catch {
     return {
       success: false,
@@ -55,15 +71,10 @@ export async function PostRecordAction(values: PosRecord, token: string) {
   }
 }
 
-export async function generarReportePDF(
-  candidateRecords: GetRecord[],
-  candidateName: string
-) {
+export async function generarReportePDF(candidateID: string) {
   try {
-    const pdfDocument = CandidateReportPDF({
-      candidateRecords,
-      candidateName
-    });
+    const res = getOneRecordAction(candidateID);
+    const pdfDocument = CandidateReportPDF(res);
 
     const buffer = await renderToBuffer(pdfDocument);
 

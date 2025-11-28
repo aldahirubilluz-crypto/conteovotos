@@ -25,39 +25,69 @@ func NewVoteService(db *gorm.DB) VoteService {
 
 func (s *voteServiceImpl) GetAll() ([]dto.VoteResponse, error) {
 	var votes []models.Vote
-	if err := s.db.Preload("Candidate").Find(&votes).Error; err != nil {
+
+	if err := s.db.Preload("Candidate.Position").Find(&votes).Error; err != nil {
 		return nil, err
 	}
 
 	res := make([]dto.VoteResponse, len(votes))
+
 	for i, v := range votes {
-		res[i] = dto.VoteResponse{
+		item := dto.VoteResponse{
 			ID:            v.ID,
 			Mesa:          v.Mesa,
 			CandidateID:   v.CandidateID,
 			CandidateName: v.Candidate.Name,
 			TotalVotes:    v.Vote,
 		}
+
+		if v.Candidate.Position != nil {
+			item.Position = dto.PositionSimple{
+				ID:           v.Candidate.Position.ID,
+				Name:         v.Candidate.Position.Name,
+				TypePosition: string(v.Candidate.Position.TypePosition),
+			}
+		}
+
+		res[i] = item
 	}
+
 	return res, nil
 }
 
 func (s *voteServiceImpl) GetByCandidate(candidateID string) ([]dto.VoteResponse, error) {
 	var votes []models.Vote
-	if err := s.db.Preload("Candidate").Where("candidate_id = ?", candidateID).Find(&votes).Error; err != nil {
+
+	// 👉 IMPORTANTE: Preload completo
+	if err := s.db.Preload("Candidate.Position").
+		Where("candidate_id = ?", candidateID).
+		Find(&votes).Error; err != nil {
 		return nil, err
 	}
 
 	res := make([]dto.VoteResponse, len(votes))
+
 	for i, v := range votes {
-		res[i] = dto.VoteResponse{
+		item := dto.VoteResponse{
 			ID:            v.ID,
 			Mesa:          v.Mesa,
 			CandidateID:   v.CandidateID,
 			CandidateName: v.Candidate.Name,
 			TotalVotes:    v.Vote,
 		}
+
+		// Si el candidato tiene un puesto, lo agregamos
+		if v.Candidate.Position != nil {
+			item.Position = dto.PositionSimple{
+				ID:           v.Candidate.Position.ID,
+				Name:         v.Candidate.Position.Name,
+				TypePosition: string(v.Candidate.Position.TypePosition),
+			}
+		}
+
+		res[i] = item
 	}
+
 	return res, nil
 }
 

@@ -7,9 +7,10 @@ type CreateVoteRequest struct {
 }
 
 type VoteResponse struct {
-	ID            string `json:"id"`
-	Mesa          string `json:"mesa"`
-	CandidateID   string `json:"candidateId"`
-	CandidateName string `json:"candidateName,omitempty"`
-	TotalVotes    int    `json:"totalVotes"`
+	ID            string         `json:"id"`
+	Mesa          string         `json:"mesa"`
+	CandidateID   string         `json:"candidateId"`
+	CandidateName string         `json:"candidateName,omitempty"`
+	TotalVotes    int            `json:"totalVotes"`
+	Position      PositionSimple `json:"position,omitempty"`
 }

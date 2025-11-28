@@ -18,20 +18,27 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Page() {
   const [record, setRecord] = useState<GetRecord[]>([]);
   const [search, setSearch] = useState("");
-  const [selectedCandidate, setSelectedCandidate] = useState<string | null>(null);
+  const [selectedCandidate, setSelectedCandidate] = useState<string | null>(
+    null
+  );
   const { data: session } = useSession();
 
   useEffect(() => {
     const loadData = async () => {
       if (!session?.user?.token) return;
 
-      const res = await getRecordAction(session.user.token);
-
+      const res = await getRecordAction();
       if (res?.data && Array.isArray(res.data)) {
         setRecord(res.data);
       } else {
@@ -43,25 +50,33 @@ export default function Page() {
     loadData();
   }, [session]);
 
-  // Filtrado
   const filtered = record.filter(
     (r) =>
       (r.candidateName.toLowerCase().includes(search.toLowerCase()) ||
         r.mesa.toLowerCase().includes(search.toLowerCase())) &&
-      (!selectedCandidate || r.candidateName === selectedCandidate)
+      (!selectedCandidate || r.candidateId === selectedCandidate)
   );
 
-  const candidates = Array.from(new Set(record.map((r) => r.candidateName)));
+  const candidates = Array.from(
+    new Map(
+      record.map((r) => [
+        r.candidateId,
+        {
+          id: r.candidateId,
+          name: r.candidateName,
+          position: r.position?.name ?? "SIN PUESTO",
+        },
+      ])
+    ).values()
+  );
+
+  console.log(candidates);
 
   const handleGenerarReporte = async () => {
     if (!selectedCandidate) return;
 
-    const registrosFiltrados = record.filter(
-      (r) => r.candidateName === selectedCandidate
-    );
-
     try {
-      const base64PDF = await generarReportePDF(registrosFiltrados, selectedCandidate);
+      const base64PDF = await generarReportePDF(selectedCandidate);
       const binaryString = atob(base64PDF);
       const bytes = new Uint8Array(binaryString.length);
       for (let i = 0; i < binaryString.length; i++) {
@@ -76,7 +91,10 @@ export default function Page() {
 
   return (
     <div className="flex flex-col w-full h-auto space-y-6">
-      <Card className="flex flex-row items-center gap-4 p-4" onClick={handleGenerarReporte}>
+      <Card
+        className="flex flex-row items-center gap-4 p-4"
+        onClick={handleGenerarReporte}
+      >
         <Button disabled={!selectedCandidate || selectedCandidate === "all"}>
           REPORTE POR CANDIDATO
         </Button>
@@ -90,11 +108,13 @@ export default function Page() {
           <SelectTrigger className="w-60">
             <SelectValue placeholder="Selecciona un candidato" />
           </SelectTrigger>
+
           <SelectContent>
             <SelectItem value="all">Seleccione</SelectItem>
+
             {candidates.map((c) => (
-              <SelectItem key={c} value={c}>
-                {c}
+              <SelectItem key={c.id} value={c.id}>
+                {c.name} — {c.position}
               </SelectItem>
             ))}
           </SelectContent>
@@ -102,7 +122,9 @@ export default function Page() {
       </Card>
       <Card className="shadow-md w-full flex flex-col px-4 py-8">
         <CardHeader className="shrink-0">
-          <CardTitle className="text-2xl font-bold">📊 Resultados de Votación</CardTitle>
+          <CardTitle className="text-2xl font-bold">
+            📊 Resultados de Votación
+          </CardTitle>
         </CardHeader>
 
         <CardContent className="flex-1 overflow-y-auto p-4">
@@ -120,7 +142,9 @@ export default function Page() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="font-bold text-center">Mesa</TableHead>
-                  <TableHead className="font-bold text-center">Candidato</TableHead>
+                  <TableHead className="font-bold text-center">
+                    Candidato
+                  </TableHead>
                   <TableHead className="font-bold text-center">Votos</TableHead>
                 </TableRow>
               </TableHeader>
@@ -130,13 +154,20 @@ export default function Page() {
                   filtered.map((r) => (
                     <TableRow key={r.id}>
                       <TableCell className="text-center">{r.mesa}</TableCell>
-                      <TableCell className="text-center">{r.candidateName}</TableCell>
-                      <TableCell className="text-center font-semibold">{r.totalVotes}</TableCell>
+                      <TableCell className="text-center">
+                        {r.candidateName}
+                      </TableCell>
+                      <TableCell className="text-center font-semibold">
+                        {r.totalVotes}
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={3} className="text-center text-gray-500 py-4">
+                    <TableCell
+                      colSpan={3}
+                      className="text-center text-gray-500 py-4"
+                    >
                       No se encontraron resultados
                     </TableCell>
                   </TableRow>
