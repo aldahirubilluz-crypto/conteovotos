@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import { PositionChip } from "../types/results";
 
+const API = process.env.NEXT_PUBLIC_API_URL;
+
 export function ResultsTable({ selectedPosition }: { selectedPosition: PositionChip }) {
     return (
         <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-lg overflow-hidden">
@@ -15,7 +17,7 @@ export function ResultsTable({ selectedPosition }: { selectedPosition: PositionC
                         <tr>
                             <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Posición</th>
                             <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Candidato</th>
-                            <th className="px-6 py-3 text-right text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Votos</th>
+                            <th className="px-6 py-3 text-right text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Puntos</th>
                             <th className="px-6 py-3 text-right text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Porcentaje</th>
                         </tr>
                     </thead>
@@ -28,7 +30,7 @@ export function ResultsTable({ selectedPosition }: { selectedPosition: PositionC
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-3">
                                         <img
-                                            src={candidate.image}
+                                            src={`${API}/images/${candidate.image}`}
                                             alt={candidate.name}
                                             className="h-10 w-10 rounded-full object-cover"
                                             onError={(e) => {
@@ -39,7 +41,7 @@ export function ResultsTable({ selectedPosition }: { selectedPosition: PositionC
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right">
-                                    <span className="text-lg font-bold text-slate-900 dark:text-white">{candidate.votes.toLocaleString("es-PE")}</span>
+                                    <span className="text-lg font-bold text-slate-900 dark:text-white">{Math.round(candidate.votes).toLocaleString("es-PE")}</span>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right">
                                     <span className="text-lg font-bold text-blue-600 dark:text-blue-400">{candidate.percentage}%</span>

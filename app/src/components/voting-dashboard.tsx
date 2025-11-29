@@ -1,12 +1,29 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useState, useEffect } from "react";
 import HeaderResult from "./main/header";
-import { getPosition, getResults } from "@/actions/get-results";
-import { GetResults, PositionChip, PositionSummary } from "./types/results";
+import { PositionChip } from "./types/results";
 import PositionChips from "./main/position-chips";
 import PositionContent from "./main/position-content";
+import { GetPositionAction } from "@/actions/position";
+import { getCantidatosAction } from "@/actions/cantidatos";
+import { getRecordAction } from "@/actions/registro";
+
+interface Vote {
+  id: string;
+  mesa: string;
+  candidateId: string;
+  candidateName: string;
+  totalVotes: number;
+  typeVote: "PERSONAL" | "PUBLICO";
+  position: {
+    id: string;
+    name: string;
+    typePosition: "AUTORIDAD" | "INTEGRANTE";
+  };
+}
 
 export default function VotingDashboardPage() {
   const [positions, setPositions] = useState<PositionChip[]>([]);
@@ -16,68 +33,106 @@ export default function VotingDashboardPage() {
     totalPositions: 0,
     totalCandidates: 0,
   });
+
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
   const fetchResults = async () => {
-    const res = await getResults();
-    const resposition = await getPosition();
-    if (res.data) {
-      const data: GetResults[] = res.data;
-      const positionData: PositionSummary[] = resposition?.data || [];
-      
-      // Crear un mapa de posiciones con sus datos adicionales
-      const positionMap = new Map<string, PositionSummary>();
-      positionData.forEach((pos) => {
-        positionMap.set(pos.positionId, pos);
-      });
+    const resPosition = await GetPositionAction();
+    const resCandidatos = await getCantidatosAction();
+    const resVotes = await getRecordAction();
 
-      const map = new Map<string, PositionChip>();
-      let totalVotes = 0;
+    if (resPosition.data && resCandidatos.data && resVotes.data) {
+      const positionsData = resPosition.data;
+      const candidatesData = resCandidatos.data;
+      const votesData: Vote[] = resVotes.data;
 
-      data.forEach((c: GetResults) => {
-        totalVotes += c.totalVotes;
-        if (!map.has(c.positionId)) {
-          const posInfo = positionMap.get(c.positionId);
-          map.set(c.positionId, {
-            positionId: c.positionId,
-            positionName: c.positionName,
-            candidates: [],
-            totalVotes: 0,
-            totalVotesPositon: posInfo?.totalVotesPositon || 0,
-            validPercentage: posInfo?.validPercentage || 0,
-          });
-        }
-        const pos = map.get(c.positionId)!;
-        pos.totalVotes += c.totalVotes;
-        pos.candidates.push({
-          id: c.candidateId,
-          name: c.candidateName,
-          votes: c.totalVotes,
-          percentage: 0,
-          image: c.imageId,
-          isWinner: false,
+      const positionMap = new Map();
+      positionsData.forEach((pos: any) => {
+        positionMap.set(pos.id, {
+          positionId: pos.id,
+          positionName: pos.name,
+          typePosition: pos.typePosition,
+          totalVotesPosition: pos.totalVotes,
+          validPercentage: pos.validPercentage,
+          candidates: [],
         });
       });
 
-      const processedPositions = Array.from(map.values()).map((pos) => {
-        const sortedCandidates = pos.candidates
-          .map((c) => ({
-            ...c,
-            percentage: Number(((c.votes / pos.totalVotes) * 100).toFixed(1)),
-          }))
-          .sort((a, b) => b.votes - a.votes);
-
-        if (sortedCandidates.length > 0) sortedCandidates[0].isWinner = true;
-        return { ...pos, candidates: sortedCandidates };
+      candidatesData.forEach((candidate: any) => {
+        const posId = candidate.position.id;
+        if (positionMap.has(posId)) {
+          positionMap.get(posId).candidates.push({
+            id: candidate.id,
+            name: candidate.name,
+            votes: 0,
+            votesPublico: 0,
+            votesPersonal: 0,
+            percentage: 0,
+            image: candidate.imageId,
+            isWinner: false,
+          });
+        }
       });
 
+      votesData.forEach((vote) => {
+        const posId = vote.position.id;
+        if (positionMap.has(posId)) {
+          const position = positionMap.get(posId);
+          const candidate = position.candidates.find((c: any) => c.id === vote.candidateId);
+
+          if (candidate) {
+            if (vote.typeVote === "PUBLICO") {
+              candidate.votesPublico += vote.totalVotes;
+            } else {
+              candidate.votesPersonal += vote.totalVotes;
+            }
+          }
+        }
+      });
+
+      let totalVotesGlobal = 0;
+
+      positionMap.forEach((position) => {
+        if (position.typePosition === "AUTORIDAD") {
+          const totalPersonal = position.candidates.reduce((sum: number, c: any) => sum + c.votesPersonal, 0);
+          const totalPublico = position.candidates.reduce((sum: number, c: any) => sum + c.votesPublico, 0);
+
+          const ponderado = totalPersonal > 0 ? (totalPublico * 2) / totalPersonal : 0;
+
+          position.candidates.forEach((candidate: any) => {
+            const votesPersonalPonderado = candidate.votesPersonal * ponderado;
+            candidate.votes = candidate.votesPublico + votesPersonalPonderado;
+          });
+        } else {
+          position.candidates.forEach((candidate: any) => {
+            candidate.votes = candidate.votesPublico + candidate.votesPersonal;
+          });
+        }
+
+        const totalVotesPosition = position.candidates.reduce((sum: number, c: any) => sum + c.votes, 0);
+        position.candidates.forEach((candidate: any) => {
+          candidate.percentage = totalVotesPosition > 0
+            ? Number(((candidate.votes / totalVotesPosition) * 100).toFixed(2))
+            : 0;
+        });
+
+        position.candidates.sort((a: any, b: any) => b.votes - a.votes);
+        if (position.candidates.length > 0) {
+          position.candidates[0].isWinner = true;
+        }
+
+        totalVotesGlobal += totalVotesPosition;
+      });
+
+      const processedPositions = Array.from(positionMap.values());
       setPositions(processedPositions);
 
       setStats({
-        totalVotes,
-        totalPositions: processedPositions.length,
-        totalCandidates: data.length,
+        totalVotes: totalVotesGlobal,
+        totalPositions: positionsData.length,
+        totalCandidates: candidatesData.length,
       });
+
       setLastUpdated(new Date());
 
       if (!selectedPositionId && processedPositions.length > 0) {
@@ -91,19 +146,6 @@ export default function VotingDashboardPage() {
     const interval = setInterval(fetchResults, 30000);
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    if (selectedPositionId) {
-      const selectedPos = positions.find(p => p.positionId === selectedPositionId);
-      if (selectedPos) {
-        setStats(prev => ({
-          ...prev,
-          totalVotesPositon: selectedPos.totalVotesPositon || 0,
-          validPercentage: selectedPos.validPercentage || 0,
-        }));
-      }
-    }
-  }, [selectedPositionId, positions]);
 
   const selectedPosition = positions.find((p) => p.positionId === selectedPositionId);
 

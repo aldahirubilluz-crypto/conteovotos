@@ -2,11 +2,10 @@ import { PosPostion, UpdatePostion } from "@/components/types/position";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
-export async function GetPositionAction(token: string) {
+export async function GetPositionAction() {
   try {
     const res = await fetch(`${API}/positions/`, {
       method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     });
     const json = await res.json();

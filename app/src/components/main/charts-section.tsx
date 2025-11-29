@@ -17,20 +17,20 @@ const COLORS = ["#3B82F6", "#10B981", "#8B5CF6", "#F59E0B", "#EF4444"];
 export function ChartsSection({ selectedPosition }: { selectedPosition: PositionChip }) {
     const chartData = selectedPosition.candidates.map((c) => ({
         name: c.name.split(" ").slice(0, 2).join(" "),
-        votes: c.votes,
+        votes: Math.round(c.votes),
         percentage: c.percentage,
     }));
 
     const pieData = selectedPosition.candidates.map((c) => ({
         name: c.name.split(" ")[0],
-        value: c.votes,
+        value: Math.round(c.votes),
     }));
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-lg">
                 <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                    <div className="h-1 w-6 bg-blue-500 rounded-full"></div>Votos por Candidato
+                    <div className="h-1 w-6 bg-blue-500 rounded-full"></div>Puntos por Candidato
                 </h4>
                 <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={chartData}>
@@ -66,7 +66,7 @@ export function ChartsSection({ selectedPosition }: { selectedPosition: Position
                             outerRadius={100}
                             paddingAngle={5}
                             dataKey="value"
-                            label={({ name, percent = 0 }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                            label={({ name, percent = 0 }) => `${name} ${(percent * 100).toFixed(2)}%`}
                         >
                             {pieData.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

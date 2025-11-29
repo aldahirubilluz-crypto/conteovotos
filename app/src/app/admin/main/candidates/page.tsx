@@ -15,9 +15,7 @@ export default function Page() {
 
   useEffect(() => {
     const loadData = async () => {
-      if (!session?.user?.token) return;
-
-      const res = await getCantidatosAction(session.user.token);
+      const res = await getCantidatosAction();
 
       if (res?.data && Array.isArray(res.data)) {
         setCandidates(res.data);

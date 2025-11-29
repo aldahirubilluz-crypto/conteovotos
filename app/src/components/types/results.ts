@@ -11,6 +11,8 @@ export interface ProcessedCandidate {
   id: string;
   name: string;
   votes: number;
+  votesPersonal: number;
+  votesPublico: number;
   percentage: number;
   image: string;
   isWinner: boolean;
@@ -21,14 +23,13 @@ export interface PositionChip {
   positionName: string;
   candidates: ProcessedCandidate[];
   totalVotes: number;
-  totalVotesPositon: number;
+  totalVotesPosition: number;
   validPercentage: number;
 }
 
-// Nuevo tipo para el endpoint de posiciones
 export interface PositionSummary {
   positionId: string;
   name: string;
-  totalVotesPositon: number;
+  totalVotesPosition: number;
   validPercentage: number;
 }

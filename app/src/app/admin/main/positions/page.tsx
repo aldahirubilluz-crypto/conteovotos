@@ -14,9 +14,8 @@ export default function Page() {
 
   useEffect(() => {
     const loadData = async () => {
-      if (!session?.user?.token) return;
-
-      const res = await GetPositionAction(session.user.token);
+      
+      const res = await GetPositionAction();
 
       if (res?.data && Array.isArray(res.data)) {
         const formatted = res.data.map((p) => ({

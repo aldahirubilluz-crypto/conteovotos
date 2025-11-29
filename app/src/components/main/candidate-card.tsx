@@ -3,7 +3,8 @@ import { ProcessedCandidate } from "../types/results";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
-export function CandidateCard({ candidate, index }: { candidate: ProcessedCandidate; index: number }) {  
+export function CandidateCard({ candidate, index }: { candidate: ProcessedCandidate; index: number }) {
+
     return (
         <div
             className={`bg-white dark:bg-slate-900 p-6 rounded-xl border-2 shadow-lg transition-all ${candidate.isWinner
@@ -34,7 +35,7 @@ export function CandidateCard({ candidate, index }: { candidate: ProcessedCandid
                         {candidate.name}
                     </h4>
                     <p className="text-slate-600 dark:text-slate-300">
-                        {candidate.votes.toLocaleString("es-PE")} votos
+                        {Math.round(candidate.votes).toLocaleString("es-PE")} puntos
                     </p>
                 </div>
             </div>
@@ -42,7 +43,7 @@ export function CandidateCard({ candidate, index }: { candidate: ProcessedCandid
             <div className="mb-2 flex justify-between items-center">
                 <span className="text-sm text-slate-500 dark:text-slate-400">Porcentaje</span>
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                    {candidate.percentage}%
+                    {candidate.percentage.toFixed(2)}%
                 </span>
             </div>
 

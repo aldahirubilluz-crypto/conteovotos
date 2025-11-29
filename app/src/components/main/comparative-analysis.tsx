@@ -13,9 +13,9 @@ export function ComparativeAnalysis({ selectedPosition }: { selectedPosition: Po
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg text-center">
-                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Diferencia de Votos</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Diferencia de puntos</p>
                     <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                        {voteDiff.toLocaleString("es-PE")}
+                        {Math.round(voteDiff).toLocaleString("es-PE")}
                     </p>
                 </div>
                 <div className="p-4 bg-purple-50 dark:bg-purple-950/30 rounded-lg text-center">
@@ -25,7 +25,7 @@ export function ComparativeAnalysis({ selectedPosition }: { selectedPosition: Po
                 <div className="p-4 bg-green-50 dark:bg-green-950/30 rounded-lg text-center">
                     <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Líder</p>
                     <p className="text-2xl font-bold text-slate-900 dark:text-white truncate">
-                        {leader.name.split(" ")[0]}
+                        {leader.name}
                     </p>
                 </div>
             </div>

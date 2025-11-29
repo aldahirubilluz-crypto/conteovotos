@@ -209,8 +209,8 @@ export default function CandidateReportPDF({ candidateRecords }: PropsRecords) {
   const positionName = first?.position?.name || "No especificado";
   const typePosition =
     first?.position?.typePosition === "AUTORIDAD"
-      ? "AUTORIDAD ADMINISTRATICA"
-      : "ORGANO EJECUTIVO";
+      ? "AUTORIDAD DE LA UNSCH"
+      : "ORGANO DE GOBIERNO DE LA UNSCH";
 
   const totalGeneral = candidateRecords.reduce(
     (sum, r) => sum + Number(r.totalVotes || 0),

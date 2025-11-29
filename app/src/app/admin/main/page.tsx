@@ -52,10 +52,9 @@ export default function Page() {
   });
 
   useEffect(() => {
-    if (!session?.user?.token) return;
     (async () => {
-      const persons = await getCantidatosAction(session.user.token);
-      const cargos = await GetPositionAction(session.user.token);
+      const persons = await getCantidatosAction();
+      const cargos = await GetPositionAction();
 
       console.log(cargos);
 
@@ -214,11 +213,10 @@ export default function Page() {
                               onClick={() => setSelectedTypeVote("PERSONAL")}
                               className={`
           px-6 py-2 rounded-xl shadow-sm transition-all
-          ${
-            selectedTypeVote === "PERSONAL"
-              ? "bg-green-500 hover:bg-green-600 text-white"
-              : "border border-green-700 text-green-900 hover:bg-green-50"
-          }
+          ${selectedTypeVote === "PERSONAL"
+                                  ? "bg-green-500 hover:bg-green-600 text-white"
+                                  : "border border-green-700 text-green-900 hover:bg-green-50"
+                                }
         `}
                             >
                               PERSONAL
@@ -234,11 +232,10 @@ export default function Page() {
                               onClick={() => setSelectedTypeVote("PUBLICO")}
                               className={`
           px-6 py-2 rounded-xl shadow-sm transition-all
-          ${
-            selectedTypeVote === "PUBLICO"
-              ? "bg-blue-500 hover:bg-blue-600 text-white"
-              : "border border-blue-700 text-blue-900 hover:bg-blue-50"
-          }
+          ${selectedTypeVote === "PUBLICO"
+                                  ? "bg-blue-500 hover:bg-blue-600 text-white"
+                                  : "border border-blue-700 text-blue-900 hover:bg-blue-50"
+                                }
         `}
                             >
                               ESTUDIANTES

@@ -1,40 +1,40 @@
 import { PositionChip } from "../types/results";
 
 export function HeaderInfo({ selectedPosition }: { selectedPosition: PositionChip }) {
-    const currentPercentage = selectedPosition.totalVotesPositon > 0
-        ? ((selectedPosition.totalVotes / selectedPosition.totalVotesPositon) * 100).toFixed(1)
+
+    const currentPercentage = selectedPosition.totalVotesPosition > 0
+        ? ((selectedPosition.candidates.reduce((sum, c) => sum + c.votesPersonal + c.votesPublico, 0) / selectedPosition.totalVotesPosition) * 100).toFixed(1)
         : "0.0";
 
-    const isValid = parseFloat(currentPercentage) >= selectedPosition.validPercentage;
+    const isValid = parseFloat(currentPercentage) >= (selectedPosition.validPercentage * 100);
+
+    const totalVotesCasted = selectedPosition.candidates.reduce((sum, c) => sum + c.votes, 0);
 
     const votesNeeded = Math.max(
         0,
-        Math.ceil((selectedPosition.validPercentage * selectedPosition.totalVotesPositon) / 100) - selectedPosition.totalVotes
+        Math.ceil((selectedPosition.validPercentage * selectedPosition.totalVotesPosition)) - totalVotesCasted
     );
 
-    const votesRemaining = Math.max(0, selectedPosition.totalVotesPositon - selectedPosition.totalVotes);
+    const votesRemaining = Math.max(0, selectedPosition.totalVotesPosition - totalVotesCasted);
 
     return (
         <div className="bg-card dark:bg-card rounded-xl border border-border shadow-lg overflow-hidden">
-
             <div className="bg-primary p-4">
                 <h2 className="text-2xl font-bold text-primary-foreground mb-2">
                     {selectedPosition.positionName}
                 </h2>
                 <p className="text-primary-foreground/80">
                     {selectedPosition.candidates.length} candidatos • Total:{" "}
-                    {selectedPosition.totalVotes.toLocaleString("es-PE")} votos
+                    {totalVotesCasted.toLocaleString("es-PE")} votos
                 </p>
             </div>
 
             <div className="p-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-                    <div className={`p-4 rounded-lg border-2 ${
-                        isValid
+                    <div className={`p-4 rounded-lg border-2 ${isValid
                             ? 'bg-green-50 dark:bg-green-950/30 border-green-500 dark:border-green-600'
                             : 'bg-yellow-50 dark:bg-yellow-950/30 border-yellow-500 dark:border-yellow-600'
-                    }`}>
+                        }`}>
                         <div className="flex items-center justify-between mb-2">
                             <p className="text-sm font-medium text-muted-foreground">
                                 Estado de Votación
@@ -43,15 +43,14 @@ export function HeaderInfo({ selectedPosition }: { selectedPosition: PositionChi
                                 {isValid ? '✅' : '⚠️'}
                             </span>
                         </div>
-                        <p className={`text-xl font-bold ${
-                            isValid
+                        <p className={`text-xl font-bold ${isValid
                                 ? 'text-green-700 dark:text-green-400'
                                 : 'text-yellow-700 dark:text-yellow-400'
-                        }`}>
+                            }`}>
                             {isValid ? 'VÁLIDO' : 'NO ALCANZADO'}
                         </p>
                         <p className="text-sm text-muted-foreground mt-1">
-                            Requiere {selectedPosition.validPercentage}% de participación
+                            Requiere {(selectedPosition.validPercentage * 100).toFixed(0)}% de participación
                         </p>
                     </div>
 
@@ -64,7 +63,7 @@ export function HeaderInfo({ selectedPosition }: { selectedPosition: PositionChi
                                 {currentPercentage}%
                             </p>
                             <p className="text-sm text-muted-foreground">
-                                de {selectedPosition.totalVotesPositon.toLocaleString("es-PE")} votantes
+                                de {selectedPosition.totalVotesPosition.toLocaleString("es-PE")} votantes
                             </p>
                         </div>
                         <div className="mt-3 bg-secondary rounded-full h-2 overflow-hidden">
@@ -84,11 +83,10 @@ export function HeaderInfo({ selectedPosition }: { selectedPosition: PositionChi
                                 <p className="text-sm text-muted-foreground">
                                     Para validez mínima:
                                 </p>
-                                <p className={`text-2xl font-bold ${
-                                    votesNeeded === 0
+                                <p className={`text-2xl font-bold ${votesNeeded === 0
                                         ? 'text-green-600 dark:text-green-400'
                                         : 'text-orange-600 dark:text-orange-400'
-                                }`}>
+                                    }`}>
                                     {votesNeeded === 0 ? '✓ Alcanzado' : votesNeeded.toLocaleString("es-PE")}
                                 </p>
                             </div>
@@ -104,7 +102,6 @@ export function HeaderInfo({ selectedPosition }: { selectedPosition: PositionChi
                     </div>
                 </div>
 
-                {/* Alerta si no es válido */}
                 {!isValid && (
                     <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-950/30 border-l-4 border-yellow-500 dark:border-yellow-600 rounded">
                         <div className="flex items-start gap-3">
@@ -115,7 +112,7 @@ export function HeaderInfo({ selectedPosition }: { selectedPosition: PositionChi
                                 </p>
                                 <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
                                     Se necesitan <strong>{votesNeeded.toLocaleString("es-PE")}</strong> votos adicionales
-                                    para alcanzar el {selectedPosition.validPercentage}% de participación requerida.
+                                    para alcanzar el {(selectedPosition.validPercentage * 100).toFixed(0)}% de participación requerida.
                                 </p>
                             </div>
                         </div>

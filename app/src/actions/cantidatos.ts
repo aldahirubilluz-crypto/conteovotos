@@ -2,11 +2,10 @@ import { PosCandidate, UpdateCandidate } from "@/components/types/cantidates";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
-export async function getCantidatosAction(token: string) {
+export async function getCantidatosAction() {
   try {
     const res = await fetch(`${API}/candidates/`, {
       method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     });
     const json = await res.json();
@@ -27,8 +26,8 @@ export async function PostCandidatesAction(
 ) {
   try {
     const formData = new FormData();
-    formData.append("name", values.name);
-    formData.append("description", values.description);
+    formData.append("name", values.name.toUpperCase());
+    formData.append("description", values.description.toUpperCase());
     formData.append("positionId", values.positionId);
 
     if (values.image) {
