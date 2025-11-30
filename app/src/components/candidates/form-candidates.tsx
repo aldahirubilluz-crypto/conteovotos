@@ -43,8 +43,8 @@ export default function FormCandidate({ handlerClose, token, onSuccess }: FormCa
 
     useEffect(() => {
         (async () => {
-            const res = await GetPositionAction(token);
-            
+            const res = await GetPositionAction();
+
             if (!res.success) return toast.error("Error al cargar puestos");
             setPositions(res.data);
         })();
@@ -56,7 +56,7 @@ export default function FormCandidate({ handlerClose, token, onSuccess }: FormCa
         setIsLoading(true);
         const values = form.getValues();
 
-        const res = await PostCandidatesAction(values, token);
+        const res = await PostCandidatesAction({ ...values, typeCandidate: "CANDIDATO" }, token);
 
         if (!res.success || res.status !== 200) {
             setIsLoading(false);

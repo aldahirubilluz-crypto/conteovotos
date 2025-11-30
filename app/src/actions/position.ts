@@ -1,4 +1,5 @@
 import { PosPostion, UpdatePostion } from "@/components/types/position";
+import { PostCandidatesAction } from "./cantidatos";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -28,6 +29,7 @@ export async function PostPositionAction(values: PosPostion, token: string) {
       description: values.description.toUpperCase(),
       validPercentage: values.validPercentage / 100,
     };
+
     const res = await fetch(`${API}/positions`, {
       method: "POST",
       headers: {
@@ -39,8 +41,26 @@ export async function PostPositionAction(values: PosPostion, token: string) {
 
     const json = await res.json();
 
+    if (!res.ok || !json.data?.id) {
+      return {
+        success: false,
+        status: json.status || res.status,
+        message: json.message,
+        data: null,
+      };
+    }
+    await PostCandidatesAction(
+      {
+        name: "VOTOS NULOS",
+        description: `VOTOS NULOS PARA ${json.data.name}`,
+        positionId: json.data.id,
+        typeCandidate: "NULL",
+      },
+      token
+    );
+
     return {
-      success: res.ok,
+      success: true,
       status: json.status || res.status,
       message: json.message,
       data: json.data,
@@ -54,7 +74,6 @@ export async function PostPositionAction(values: PosPostion, token: string) {
     };
   }
 }
-
 export async function DeletePositionAction(id: string, token: string) {
   try {
     const res = await fetch(`${API}/positions/${id}`, {

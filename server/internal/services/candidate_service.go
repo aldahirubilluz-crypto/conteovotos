@@ -27,10 +27,11 @@ func NewCandidateService(db *gorm.DB) CandidateService {
 
 func mapModelToResponse(c models.Candidate) dto.CandidateResponse {
 	response := dto.CandidateResponse{
-		ID:          c.ID,
-		Name:        c.Name,
-		Description: c.Description,
-		IsActive:    c.IsActive,
+		ID:            c.ID,
+		Name:          c.Name,
+		Description:   c.Description,
+		IsActive:      c.IsActive,
+		TypeCandidate: c.TypeCandidate,
 	}
 
 	if c.Image != nil {
@@ -104,9 +105,10 @@ func (s *candidateServiceImpl) Create(req dto.CreateCandidateRequest, userID, us
 	}
 
 	candidate := models.Candidate{
-		Name:        req.Name,
-		Description: req.Description,
-		IsActive:    true,
+		Name:          req.Name,
+		Description:   req.Description,
+		IsActive:      true,
+		TypeCandidate: req.TypeCandidate,
 	}
 
 	if req.IsActive != nil {

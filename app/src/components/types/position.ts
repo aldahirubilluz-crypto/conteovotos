@@ -6,7 +6,6 @@ export interface GetPosition {
   totalVotes: number;
   validPercentage: number;
   createdAt: Date;
-  updatedAt: Date;
 }
 
 export interface PosPostion {

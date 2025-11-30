@@ -3,7 +3,7 @@ export interface GetCantidatos {
     name: string;
     description: string;
     isActive: boolean;
-    order: number;
+    typeCandidate: string;
     position: ProntPosition;
     imageId: string;
     imageUrl: string;
@@ -13,6 +13,7 @@ export interface PosCandidate {
     name: string;
     description: string;
     positionId: string;
+    typeCandidate: string;
     image?: File;
 }
 

@@ -12,10 +12,12 @@ interface Props {
 }
 
 export default function PositionContent({ selectedPosition }: Props) {
-    
     return (
         <div className="w-full mx-auto px-4 md:px-6 space-y-6">
-            <HeaderInfo selectedPosition={selectedPosition} />
+            <HeaderInfo
+                selectedPosition={selectedPosition}
+                totalVotesWithNulls={selectedPosition.totalVotesWithNulls}
+            />
             <CandidatesGrid selectedPosition={selectedPosition} />
             {selectedPosition.candidates.length >= 2 && (
                 <ComparativeAnalysis selectedPosition={selectedPosition} />

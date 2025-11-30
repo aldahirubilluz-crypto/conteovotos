@@ -29,6 +29,7 @@ export async function PostCandidatesAction(
     formData.append("name", values.name.toUpperCase());
     formData.append("description", values.description.toUpperCase());
     formData.append("positionId", values.positionId);
+    formData.append("typeCandidate", values.typeCandidate);
 
     if (values.image) {
       formData.append("image", values.image);

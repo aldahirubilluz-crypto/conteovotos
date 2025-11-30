@@ -32,6 +32,7 @@ import {
   formSchemaRegister,
   FormValuesRegister,
 } from "@/components/schema/schema-register";
+import { ConfirmDialog } from "@/components/ui/dialog-confirm";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -43,6 +44,9 @@ export default function Page() {
   const [selectedTypeVote, setSelectedTypeVote] = useState<
     "PERSONAL" | "PUBLICO"
   >("PERSONAL");
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [pendingValues, setPendingValues] = useState<FormValuesRegister | null>(null);
+
 
   const { data: session, status } = useSession();
 
@@ -66,7 +70,17 @@ export default function Page() {
     })();
   }, [session]);
 
-  const onSubmit = async (values: FormValuesRegister) => {
+  const onSubmit = (values: FormValuesRegister) => {
+    setPendingValues(values);
+    setOpenConfirm(true);
+  };
+
+  const confirmSubmit = async () => {
+    if (!pendingValues) return;
+
+    const values = pendingValues;
+    setOpenConfirm(false);
+
     if (!session?.user?.token) return toast.error("Token inválido");
 
     const currentPosition = positions.find((p) => p.id === activeTab);
@@ -87,7 +101,6 @@ export default function Page() {
       return toast.warning("No hay candidatos en esta posición");
     }
 
-    // Cambio aquí: AUTORIDAD usa selectedTypeVote, INTEGRANTE usa "PUBLICO"
     const typeVote =
       currentPosition.typePosition === "AUTORIDAD"
         ? selectedTypeVote
@@ -114,15 +127,14 @@ export default function Page() {
       `${success} registro(s) completados para ${currentPosition.name} - ${typeVote}`
     );
 
-    const currentVotes = { ...values.votes };
-    currentCandidates.forEach((c) => {
-      delete currentVotes[c.id];
+    form.reset({
+      mesa: "",
+      votes: {},
     });
 
-    form.setValue("votes", currentVotes);
-    form.setValue("mesa", "");
     setSelectedTypeVote("PERSONAL");
     setIsSubmitting(false);
+
   };
 
   if (status === "loading") {
@@ -326,6 +338,14 @@ export default function Page() {
           </Tabs>
         </CardContent>
       </Card>
+      <ConfirmDialog
+        isOpen={openConfirm}
+        onClose={() => setOpenConfirm(false)}
+        onConfirm={confirmSubmit}
+        title="Confirmar Registro"
+        description="¿Estás seguro de registrar estos votos? Esta acción no se puede deshacer."
+      />
+
     </div>
   );
 }

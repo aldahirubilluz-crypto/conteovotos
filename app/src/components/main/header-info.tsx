@@ -1,9 +1,13 @@
 import { PositionChip } from "../types/results";
 
-export function HeaderInfo({ selectedPosition }: { selectedPosition: PositionChip }) {
+interface Props {
+    selectedPosition: PositionChip;
+    totalVotesWithNulls: number; // Nuevo prop
+}
 
+export function HeaderInfo({ selectedPosition, totalVotesWithNulls }: Props) {
     const currentPercentage = selectedPosition.totalVotesPosition > 0
-        ? ((selectedPosition.candidates.reduce((sum, c) => sum + c.votesPersonal + c.votesPublico, 0) / selectedPosition.totalVotesPosition) * 100).toFixed(1)
+        ? ((totalVotesWithNulls / selectedPosition.totalVotesPosition) * 100).toFixed(1)
         : "0.0";
 
     const isValid = parseFloat(currentPercentage) >= (selectedPosition.validPercentage * 100);
@@ -12,10 +16,10 @@ export function HeaderInfo({ selectedPosition }: { selectedPosition: PositionChi
 
     const votesNeeded = Math.max(
         0,
-        Math.ceil((selectedPosition.validPercentage * selectedPosition.totalVotesPosition)) - totalVotesCasted
+        Math.ceil((selectedPosition.validPercentage * selectedPosition.totalVotesPosition)) - totalVotesWithNulls
     );
 
-    const votesRemaining = Math.max(0, selectedPosition.totalVotesPosition - totalVotesCasted);
+    const votesRemaining = Math.max(0, selectedPosition.totalVotesPosition - totalVotesWithNulls);
 
     return (
         <div className="bg-card dark:bg-card rounded-xl border border-border shadow-lg overflow-hidden">
@@ -25,15 +29,15 @@ export function HeaderInfo({ selectedPosition }: { selectedPosition: PositionChi
                 </h2>
                 <p className="text-primary-foreground/80">
                     {selectedPosition.candidates.length} candidatos • Total:{" "}
-                    {totalVotesCasted.toLocaleString("es-PE")} votos
+                    {Math.round(totalVotesCasted).toLocaleString("es-PE")} votos
                 </p>
             </div>
 
             <div className="p-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className={`p-4 rounded-lg border-2 ${isValid
-                            ? 'bg-green-50 dark:bg-green-950/30 border-green-500 dark:border-green-600'
-                            : 'bg-yellow-50 dark:bg-yellow-950/30 border-yellow-500 dark:border-yellow-600'
+                        ? 'bg-green-50 dark:bg-green-950/30 border-green-500 dark:border-green-600'
+                        : 'bg-yellow-50 dark:bg-yellow-950/30 border-yellow-500 dark:border-yellow-600'
                         }`}>
                         <div className="flex items-center justify-between mb-2">
                             <p className="text-sm font-medium text-muted-foreground">
@@ -44,8 +48,8 @@ export function HeaderInfo({ selectedPosition }: { selectedPosition: PositionChi
                             </span>
                         </div>
                         <p className={`text-xl font-bold ${isValid
-                                ? 'text-green-700 dark:text-green-400'
-                                : 'text-yellow-700 dark:text-yellow-400'
+                            ? 'text-green-700 dark:text-green-400'
+                            : 'text-yellow-700 dark:text-yellow-400'
                             }`}>
                             {isValid ? 'VÁLIDO' : 'NO ALCANZADO'}
                         </p>
@@ -84,8 +88,8 @@ export function HeaderInfo({ selectedPosition }: { selectedPosition: PositionChi
                                     Para validez mínima:
                                 </p>
                                 <p className={`text-2xl font-bold ${votesNeeded === 0
-                                        ? 'text-green-600 dark:text-green-400'
-                                        : 'text-orange-600 dark:text-orange-400'
+                                    ? 'text-green-600 dark:text-green-400'
+                                    : 'text-orange-600 dark:text-orange-400'
                                     }`}>
                                     {votesNeeded === 0 ? '✓ Alcanzado' : votesNeeded.toLocaleString("es-PE")}
                                 </p>

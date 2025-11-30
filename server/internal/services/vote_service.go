@@ -105,8 +105,8 @@ func (s *voteServiceImpl) Create(req dto.CreateVoteRequest, userID, userRole str
 	}
 
 	validTypes := map[models.TypeVote]bool{
-		models.TVpersonal: true,
-		models.TVpublico:  true,
+		models.TVpersonnel: true,
+		models.TVpublic:    true,
 	}
 
 	tv := models.TypeVote(req.TypeVote)

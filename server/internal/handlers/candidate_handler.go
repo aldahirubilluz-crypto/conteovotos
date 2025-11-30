@@ -3,10 +3,12 @@ package handlers
 import (
 	"path/filepath"
 
-	"github.com/gofiber/fiber/v3"
 	"server/internal/dto"
+	"server/internal/models"
 	"server/internal/services"
 	"server/pkgs/logger"
+
+	"github.com/gofiber/fiber/v3"
 )
 
 type CandidateHandler struct {
@@ -77,6 +79,12 @@ func (h *CandidateHandler) Create(c fiber.Ctx) (interface{}, string, error) {
 	description := c.FormValue("description")
 	positionID := c.FormValue("positionId")
 
+	typeCandidateStr := c.FormValue("typeCandidate")
+	if typeCandidateStr == "" {
+		typeCandidateStr = string(models.TCcandidate)
+	}
+	typeCandidate := models.TypeCandidates(typeCandidateStr)
+
 	var isActive *bool
 	if isActiveStr := c.FormValue("isActive"); isActiveStr != "" {
 		val := isActiveStr == "true"
@@ -108,11 +116,12 @@ func (h *CandidateHandler) Create(c fiber.Ctx) (interface{}, string, error) {
 	}
 
 	req := dto.CreateCandidateRequest{
-		Name:        name,
-		Description: descPtr,
-		ImageID:     imageID,
-		IsActive:    isActive,
-		PositionID:  positionID,
+		Name:          name,
+		Description:   descPtr,
+		ImageID:       imageID,
+		IsActive:      isActive,
+		PositionID:    positionID,
+		TypeCandidate: typeCandidate,
 	}
 
 	candidate, err := h.service.Create(req, userID, userRole)

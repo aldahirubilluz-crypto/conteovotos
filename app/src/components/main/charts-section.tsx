@@ -17,7 +17,7 @@ const COLORS = ["#3B82F6", "#10B981", "#8B5CF6", "#F59E0B", "#EF4444"];
 export function ChartsSection({ selectedPosition }: { selectedPosition: PositionChip }) {
     const chartData = selectedPosition.candidates.map((c) => ({
         name: c.name.split(" ").slice(0, 2).join(" "),
-        votes: Math.round(c.votes),
+        puntaje: Math.round(c.votes),
         percentage: c.percentage,
     }));
 
@@ -43,7 +43,7 @@ export function ChartsSection({ selectedPosition }: { selectedPosition: Position
                                 borderRadius: "8px",
                             }}
                         />
-                        <Bar dataKey="votes" radius={[8, 8, 0, 0]}>
+                        <Bar dataKey="puntaje" radius={[8, 8, 0, 0]}>
                             {chartData.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                             ))}
