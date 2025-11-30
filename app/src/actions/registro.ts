@@ -6,7 +6,7 @@ import { renderToBuffer } from "@react-pdf/renderer";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
-export async function getRecordAction() {
+export async function GetRecordAction() {
   try {
     const res = await fetch(`${API}/votes/`, {
       method: "GET",
@@ -24,7 +24,7 @@ export async function getRecordAction() {
   }
 }
 
-export async function getOneRecordAction(Id: string) {
+export async function GetOneRecordAction(Id: string) {
   try {
     const res = await fetch(`${API}/votes/candidate/${Id}`, {
       method: "GET",
@@ -71,9 +71,9 @@ export async function PostRecordAction(values: PosRecord, token: string) {
   }
 }
 
-export async function generarReportePDF(candidateID: string) {
+export async function GenerarReportePDF(candidateID: string) {
   try {
-    const res = await getOneRecordAction(candidateID);
+    const res = await GetOneRecordAction(candidateID);
 
     if (!res.success) throw new Error("No se pudieron obtener registros");
 

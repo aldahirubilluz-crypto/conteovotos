@@ -21,6 +21,9 @@ export function HeaderInfo({ selectedPosition, totalVotesWithNulls }: Props) {
 
     const votesRemaining = Math.max(0, selectedPosition.totalVotesPosition - totalVotesWithNulls);
 
+    console.log(totalVotesWithNulls);
+    
+
     return (
         <div className="bg-card dark:bg-card rounded-xl border border-border shadow-lg overflow-hidden">
             <div className="bg-primary p-4">

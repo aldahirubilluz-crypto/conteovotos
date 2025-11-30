@@ -1,6 +1,6 @@
 "use client";
 
-import { getCantidatosAction } from "@/actions/cantidatos";
+import { GetCantidatosAction } from "@/actions/cantidatos";
 import CandidatesTable from "@/components/candidates/candidates-table";
 import CreateCandidates from "@/components/candidates/create-candidates";
 import { GetCantidatos } from "@/components/types/cantidates";
@@ -15,7 +15,7 @@ export default function Page() {
 
   useEffect(() => {
     const loadData = async () => {
-      const res = await getCantidatosAction();
+      const res = await GetCantidatosAction();
 
       if (res?.data && Array.isArray(res.data)) {
         setCandidates(res.data);

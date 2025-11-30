@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { getCantidatosAction } from "@/actions/cantidatos";
+import { GetCantidatosAction } from "@/actions/cantidatos";
 import { GetPositionAction } from "@/actions/position";
 import { PostRecordAction } from "@/actions/registro";
 
@@ -57,11 +57,8 @@ export default function Page() {
 
   useEffect(() => {
     (async () => {
-      const persons = await getCantidatosAction();
+      const persons = await GetCantidatosAction();
       const cargos = await GetPositionAction();
-
-      console.log(cargos);
-
       if (Array.isArray(persons?.data)) setCandidates(persons.data);
       if (Array.isArray(cargos?.data)) {
         setPositions(cargos.data);
@@ -111,7 +108,7 @@ export default function Page() {
 
     for (const { candidateId, totalVotes } of votesToSubmit) {
       const res = await PostRecordAction(
-        { mesa: values.mesa, candidateId, totalVotes, typeVote },
+        { mesa: values.mesa.toUpperCase(), candidateId, totalVotes, typeVote },
         session.user.token
       );
 

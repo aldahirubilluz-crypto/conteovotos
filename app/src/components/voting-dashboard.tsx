@@ -1,14 +1,14 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import HeaderResult from "./main/header";
 import { PositionChip, ProcessedCandidate } from "./types/results";
 import PositionChips from "./main/position-chips";
 import PositionContent from "./main/position-content";
 import { GetPositionAction } from "@/actions/position";
-import { getCantidatosAction } from "@/actions/cantidatos";
-import { getRecordAction } from "@/actions/registro";
+import { GetCantidatosAction } from "@/actions/cantidatos";
+import { GetRecordAction } from "@/actions/registro";
 import { GetPosition } from "./types/position";
 import { GetCantidatos } from "./types/cantidates";
 
@@ -36,11 +36,12 @@ export default function VotingDashboardPage() {
   });
 
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const hasInitializedSelection = useRef(false);
 
   const fetchResults = async () => {
     const resPosition = await GetPositionAction();
-    const resCandidatos = await getCantidatosAction();
-    const resVotes = await getRecordAction();
+    const resCandidatos = await GetCantidatosAction();
+    const resVotes = await GetRecordAction();
 
     if (resPosition.data && resCandidatos.data && resVotes.data) {
       const positionsData = resPosition.data;
@@ -147,8 +148,9 @@ export default function VotingDashboardPage() {
 
       setLastUpdated(new Date());
 
-      if (!selectedPositionId && processedPositions.length > 0) {
+      if (!hasInitializedSelection.current && processedPositions.length > 0) {
         setSelectedPositionId(processedPositions[0].positionId);
+        hasInitializedSelection.current = true;
       }
     }
   };

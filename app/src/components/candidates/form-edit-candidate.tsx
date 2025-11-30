@@ -79,7 +79,7 @@ export default function FormEditCandidate({
 
   useEffect(() => {
     (async () => {
-      const res = await GetPositionAction(token);
+      const res = await GetPositionAction();
       if (!res.success) return toast.error("Error al cargar puestos");
       setPositions(res.data);
     })();

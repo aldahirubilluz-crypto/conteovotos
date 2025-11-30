@@ -1,4 +1,4 @@
-//app/src/app/admin/layout.tsx
+
 export default function AdminLayout({
   children,
 }: {

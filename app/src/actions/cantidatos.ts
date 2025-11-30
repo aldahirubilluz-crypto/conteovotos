@@ -2,7 +2,7 @@ import { PosCandidate, UpdateCandidate } from "@/components/types/cantidates";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
-export async function getCantidatosAction() {
+export async function GetCantidatosAction() {
   try {
     const res = await fetch(`${API}/candidates/`, {
       method: "GET",

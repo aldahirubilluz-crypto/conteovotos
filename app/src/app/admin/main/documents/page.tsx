@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { saveAs } from "file-saver";
 
-import { generarReportePDF, getRecordAction } from "@/actions/registro";
+import { GenerarReportePDF, GetRecordAction } from "@/actions/registro";
 import type { GetRecord } from "@/components/types/record";
 
 import {
@@ -38,7 +38,7 @@ export default function Page() {
     const loadData = async () => {
       if (!session?.user?.token) return;
 
-      const res = await getRecordAction();
+      const res = await GetRecordAction();
       if (res?.data && Array.isArray(res.data)) {
         setRecord(res.data);
       } else {
@@ -76,7 +76,7 @@ export default function Page() {
     try {
       console.log("Alda 1", selectedCandidate);
       
-      const base64PDF = await generarReportePDF(selectedCandidate);
+      const base64PDF = await GenerarReportePDF(selectedCandidate);
       const binaryString = atob(base64PDF);
       const bytes = new Uint8Array(binaryString.length);
       for (let i = 0; i < binaryString.length; i++) {
