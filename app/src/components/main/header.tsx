@@ -63,7 +63,7 @@ export default function HeaderResult({ stats, lastUpdated }: HeaderProps) {
     <div className="bg-primary text-secondary shadow-lg rounded-b-2xl">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-4">
         <h1 className="text-2xl md:text-4xl font-bold mb-4">
-          🗳️ Resultados Electorales 2024
+          🗳️ Resultados Electorales 2025
         </h1>
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">

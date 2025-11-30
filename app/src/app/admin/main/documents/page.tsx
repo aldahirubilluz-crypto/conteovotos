@@ -74,8 +74,7 @@ export default function Page() {
     if (!selectedCandidate) return;
 
     try {
-      console.log("Alda 1", selectedCandidate);
-      
+    
       const base64PDF = await GenerarReportePDF(selectedCandidate);
       const binaryString = atob(base64PDF);
       const bytes = new Uint8Array(binaryString.length);

@@ -91,11 +91,7 @@ export default function FormEditCandidate({
     setIsLoading(true);
     const values = form.getValues();
 
-    console.log(values);
-
     const res = await UpdateCandidateAction(candidate.id, values, token);
-
-    console.log(res);
 
     if (!res.success || res.status !== 200) {
       setIsLoading(false);
