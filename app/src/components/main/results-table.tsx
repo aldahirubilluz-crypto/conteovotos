@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { PositionChip } from "../types/results";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = process.env.API_BASE_URL;
 
 export function ResultsTable({ selectedPosition }: { selectedPosition: PositionChip }) {
     return (

@@ -34,7 +34,7 @@ import {
 } from "@/components/schema/schema-register";
 import { ConfirmDialog } from "@/components/ui/dialog-confirm";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = process.env.API_BASE_URL;
 
 export default function Page() {
   const [positions, setPositions] = useState<GetPosition[]>([]);

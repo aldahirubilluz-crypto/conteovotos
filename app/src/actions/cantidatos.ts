@@ -1,6 +1,6 @@
 import { PosCandidate, UpdateCandidate } from "@/components/types/cantidates";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = process.env.API_BASE_URL;
 
 export async function GetCantidatosAction() {
   try {

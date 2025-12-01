@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { ProcessedCandidate } from "../types/results";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = process.env.API_BASE_URL;
 
 export function CandidateCard({ candidate, index }: { candidate: ProcessedCandidate; index: number }) {
 

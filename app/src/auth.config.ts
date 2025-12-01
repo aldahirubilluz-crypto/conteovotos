@@ -4,7 +4,7 @@ import Credentials from "next-auth/providers/credentials";
 import type { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+const API_BASE = process.env.API_BASE_URL;
 
 async function postJSON(url: string, body: unknown) {
   const res = await fetch(url, {

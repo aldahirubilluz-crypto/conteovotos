@@ -1,7 +1,7 @@
 import { PosPostion, UpdatePostion } from "@/components/types/position";
 import { PostCandidatesAction } from "./cantidatos";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = process.env.API_BASE_URL;
 
 export async function GetPositionAction() {
   try {

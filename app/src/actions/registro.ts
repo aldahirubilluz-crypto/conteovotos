@@ -4,7 +4,7 @@ import CandidateReportPDF from "@/components/pdf/candidate-report-pdf";
 import { PosRecord } from "@/components/types/record";
 import { renderToBuffer } from "@react-pdf/renderer";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = process.env.API_BASE_URL;
 
 export async function GetRecordAction() {
   try {

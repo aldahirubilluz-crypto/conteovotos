@@ -3,7 +3,7 @@
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+const API_BASE = process.env.API_BASE_URL;
 
 async function postJSON(url: string, body: unknown) {
   const res = await fetch(url, {
