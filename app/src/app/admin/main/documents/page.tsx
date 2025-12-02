@@ -89,9 +89,6 @@ export default function Page() {
     }
   };
 
-  console.log(filtered);
-  
-
   return (
     <div className="flex flex-col w-full h-auto space-y-6">
       <Card

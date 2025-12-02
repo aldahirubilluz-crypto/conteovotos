@@ -1,4 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
+"use client"
+
 import { ProcessedCandidate } from "../types/results";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
