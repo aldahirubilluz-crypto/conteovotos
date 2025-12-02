@@ -18,5 +18,5 @@ export interface PosRecord {
   mesa: string;
   candidateId: string;
   totalVotes: number;
-  typeVote: "PERSONAL" | "PUBLICO";
+  typeVote: "DOCENTES" | "PUBLICO";
 }

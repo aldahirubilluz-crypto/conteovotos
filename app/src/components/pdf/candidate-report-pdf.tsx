@@ -218,7 +218,7 @@ export default function CandidateReportPDF({ candidateRecords }: PropsRecords) {
   );
 
   const totalPersonal = candidateRecords
-    .filter((r) => r.typeVote === "PERSONAL")
+    .filter((r) => r.typeVote === "DOCENTES")
     .reduce((sum, r) => sum + Number(r.totalVotes || 0), 0);
 
   const totalPublico = candidateRecords
@@ -290,7 +290,7 @@ export default function CandidateReportPDF({ candidateRecords }: PropsRecords) {
                   </Text>
 
                   <Text style={[styles.cell, { width: "25%" }]}>
-                    {record.typeVote === "PERSONAL"
+                    {record.typeVote === "DOCENTES"
                       ? "Personal"
                       : "Estudiantes"}
                   </Text>

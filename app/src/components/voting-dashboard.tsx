@@ -18,7 +18,7 @@ interface Vote {
   candidateId: string;
   candidateName: string;
   totalVotes: number;
-  typeVote: "PERSONAL" | "PUBLICO";
+  typeVote: "DOCENTES" | "PUBLICO";
   position: {
     id: string;
     name: string;

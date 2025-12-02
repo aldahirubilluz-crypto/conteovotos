@@ -42,8 +42,8 @@ export default function Page() {
   const [activeTab, setActiveTab] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedTypeVote, setSelectedTypeVote] = useState<
-    "PERSONAL" | "PUBLICO"
-  >("PERSONAL");
+    "DOCENTES" | "PUBLICO"
+  >("DOCENTES");
   const [openConfirm, setOpenConfirm] = useState(false);
   const [pendingValues, setPendingValues] = useState<FormValuesRegister | null>(null);
 
@@ -130,7 +130,7 @@ export default function Page() {
       votes: {},
     });
 
-    setSelectedTypeVote("PERSONAL");
+    setSelectedTypeVote("DOCENTES");
     setIsSubmitting(false);
 
   };
@@ -216,20 +216,20 @@ export default function Page() {
                             <Button
                               type="button"
                               variant={
-                                selectedTypeVote === "PERSONAL"
+                                selectedTypeVote === "DOCENTES"
                                   ? "default"
                                   : "outline"
                               }
-                              onClick={() => setSelectedTypeVote("PERSONAL")}
+                              onClick={() => setSelectedTypeVote("DOCENTES")}
                               className={`
           px-6 py-2 rounded-xl shadow-sm transition-all
-          ${selectedTypeVote === "PERSONAL"
+          ${selectedTypeVote === "DOCENTES"
                                   ? "bg-green-500 hover:bg-green-600 text-white"
                                   : "border border-green-700 text-green-900 hover:bg-green-50"
                                 }
         `}
                             >
-                              PERSONAL
+                              DOCENTES
                             </Button>
 
                             <Button

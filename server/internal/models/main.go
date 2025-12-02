@@ -15,7 +15,7 @@ const (
 	TIposition  TypePositions  = "ORGANO"
 	TCcandidate TypeCandidates = "CANDIDATO"
 	TCnull      TypeCandidates = "NULL"
-	TVpersonnel TypeVote       = "PERSONAL"
+	TVpersonnel TypeVote       = "DOCENTES"
 	TVpublic    TypeVote       = "PUBLICO"
 )
 

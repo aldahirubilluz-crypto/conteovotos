@@ -23,7 +23,7 @@ type PropsTable = {
   onRefresh: () => void;
 };
 
-const API = process.env.API_BASE_URL;
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 export default function CandidatesTable({
   data,
@@ -83,7 +83,7 @@ export default function CandidatesTable({
                       {c.imageId ? (
                         <img
                           src={`${API}/images/${c.imageId}`}
-                          alt={c.name}
+                          alt={`${API}/images/${c.imageId}`}
                           className="w-full h-full object-cover"
                         />
                       ) : (

@@ -112,7 +112,7 @@ func (s *voteServiceImpl) Create(req dto.CreateVoteRequest, userID, userRole str
 	tv := models.TypeVote(req.TypeVote)
 
 	if !validTypes[tv] {
-		return nil, fmt.Errorf("typeVote inválido: debe ser PERSONAL o PUBLICO")
+		return nil, fmt.Errorf("typeVote inválido: debe ser DOCENTES o PUBLICO")
 	}
 
 	var candidate models.Candidate
