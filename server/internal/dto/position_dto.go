@@ -11,7 +11,7 @@ type CreatePositionRequest struct {
 type UpdatePositionRequest struct {
 	Name            *string  `json:"name,omitempty"`
 	Description     *string  `json:"description,omitempty"`
-	TypePosition    *string  `json:"typePosition,omitempty" validate:"omitempty,oneof=AUTORIDAD INTEGRANTE"`
+	TypePosition    *string  `json:"typePosition,omitempty" validate:"omitempty,oneof=AUTORIDAD ORGANO"`
 	TotalVotes      *int     `json:"totalVotes,omitempty" validate:"omitempty,min=0"`
 	ValidPercentage *float64 `json:"validPercentage,omitempty" validate:"omitempty,gte=0,lte=1"`
 }

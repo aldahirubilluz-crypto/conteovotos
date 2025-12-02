@@ -12,7 +12,7 @@ export interface ProcessedCandidate {
 export interface PositionChip {
   positionId: string;
   positionName: string;
-  typePosition: "AUTORIDAD" | "INTEGRANTE";
+  typePosition: "AUTORIDAD" | "ORGANO";
   candidates: ProcessedCandidate[];
   totalVotesPosition: number;
   validPercentage: number;

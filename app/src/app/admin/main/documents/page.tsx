@@ -39,6 +39,7 @@ export default function Page() {
       if (!session?.user?.token) return;
 
       const res = await GetRecordAction();
+
       if (res?.data && Array.isArray(res.data)) {
         setRecord(res.data);
       } else {
@@ -74,7 +75,7 @@ export default function Page() {
     if (!selectedCandidate) return;
 
     try {
-    
+
       const base64PDF = await GenerarReportePDF(selectedCandidate);
       const binaryString = atob(base64PDF);
       const bytes = new Uint8Array(binaryString.length);
@@ -87,6 +88,9 @@ export default function Page() {
       console.error("Error generando reporte PDF:", error);
     }
   };
+
+  console.log(filtered);
+  
 
   return (
     <div className="flex flex-col w-full h-auto space-y-6">
@@ -144,6 +148,12 @@ export default function Page() {
                   <TableHead className="font-bold text-center">
                     Candidato
                   </TableHead>
+                  <TableHead className="font-bold text-center">
+                    Puesto
+                  </TableHead>
+                  <TableHead className="font-bold text-center">
+                    Tipo de Puesto
+                  </TableHead>
                   <TableHead className="font-bold text-center">Votos</TableHead>
                 </TableRow>
               </TableHeader>
@@ -155,6 +165,12 @@ export default function Page() {
                       <TableCell className="text-center">{r.mesa}</TableCell>
                       <TableCell className="text-center">
                         {r.candidateName}
+                      </TableCell>
+                      <TableCell className="text-center font-semibold">
+                        {r.position.name}
+                      </TableCell>
+                      <TableCell className="text-center font-semibold">
+                        {r.position.typePosition}
                       </TableCell>
                       <TableCell className="text-center font-semibold">
                         {r.totalVotes}

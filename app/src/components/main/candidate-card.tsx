@@ -1,24 +1,24 @@
 /* eslint-disable @next/next/no-img-element */
 import { ProcessedCandidate } from "../types/results";
 
-const API = process.env.API_BASE_URL;
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 export function CandidateCard({ candidate, index }: { candidate: ProcessedCandidate; index: number }) {
 
     return (
         <div
             className={`bg-white dark:bg-slate-900 p-6 rounded-xl border-2 shadow-lg transition-all ${candidate.isWinner
-                    ? "border-blue-500 bg-blue-50 dark:bg-blue-950/30"
-                    : "border-slate-200 dark:border-slate-700"
+                ? "border-blue-500 bg-blue-50 dark:bg-blue-950/30"
+                : "border-slate-200 dark:border-slate-700"
                 }`}
         >
             <div className="flex items-center gap-4 mb-4">
                 <div
                     className={`h-10 w-10 rounded-full flex items-center justify-center font-bold text-lg ${index === 0
-                            ? "bg-yellow-400 text-yellow-900"
-                            : index === 1
-                                ? "bg-slate-300 text-slate-700"
-                                : "bg-slate-200 text-slate-600"
+                        ? "bg-yellow-400 text-yellow-900"
+                        : index === 1
+                            ? "bg-slate-300 text-slate-700"
+                            : "bg-slate-200 text-slate-600"
                         }`}
                 >
                     {index + 1}

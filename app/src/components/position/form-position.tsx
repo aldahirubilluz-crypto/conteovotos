@@ -45,7 +45,7 @@ export default function FormPosition({
       description: "",
       totalVotes: undefined,
       validPercentage: undefined,
-      typePosition: "INTEGRANTE",
+      typePosition: "ORGANO",
     },
   });
 
@@ -119,7 +119,7 @@ export default function FormPosition({
                 name="totalVotes"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Total de Votos</FormLabel>
+                    <FormLabel>Cantidad de Electores</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -175,7 +175,7 @@ export default function FormPosition({
                     <FormLabel>Tipo de Puesto</FormLabel>
                     <FormControl>
                       <div className="flex gap-2">
-                        {["AUTORIDAD", "INTEGRANTE"].map((option) => (
+                        {["AUTORIDAD", "ORGANO"].map((option) => (
                           <Button
                             key={option}
                             type="button"

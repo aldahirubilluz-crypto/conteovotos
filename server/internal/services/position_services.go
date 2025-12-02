@@ -3,10 +3,11 @@ package services
 import (
 	"errors"
 	"fmt"
-	"gorm.io/gorm"
 	"server/internal/dto"
 	"server/internal/models"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type PositionService interface {
@@ -73,7 +74,7 @@ func (s *positionServiceImpl) Create(req dto.CreatePositionRequest, userID, user
 	}
 
 	if !isValid {
-		return nil, fmt.Errorf("typePosition inválido, debe ser AUTORIDAD o INTEGRANTE")
+		return nil, fmt.Errorf("typePosition inválido, debe ser AUTORIDAD o ORGANO")
 	}
 
 	if req.TotalVotes <= 0 {
@@ -147,7 +148,7 @@ func (s *positionServiceImpl) Update(id string, req dto.UpdatePositionRequest, u
 		}
 
 		if !isValid {
-			return nil, fmt.Errorf("typePosition inválido, debe ser AUTORIDAD o INTEGRANTE")
+			return nil, fmt.Errorf("typePosition inválido, debe ser AUTORIDAD o ORGANO")
 		}
 
 		position.TypePosition = models.TypePositions(*req.TypePosition)

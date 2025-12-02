@@ -5,7 +5,7 @@ export const positionSchema = z.object({
   description: z.string().min(1, "La descripción es requerida"),
 
   typePosition: z
-    .enum(["AUTORIDAD", "INTEGRANTE"])
+    .enum(["AUTORIDAD", "ORGANO"])
     .refine((val) => val !== undefined, {
       message: "El tipo de puesto es requerido",
     }),
@@ -23,7 +23,7 @@ export const positionUpdateSchema = z.object({
   description: z.string().min(1, "La descripción es requerida"),
 
   typePosition: z
-    .enum(["AUTORIDAD", "INTEGRANTE"])
+    .enum(["AUTORIDAD", "ORGANO"])
     .refine((val) => val !== undefined, {
       message: "El tipo de puesto es requerido",
     }),

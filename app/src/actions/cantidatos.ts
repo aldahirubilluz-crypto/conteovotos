@@ -1,3 +1,5 @@
+"use server"
+
 import { PosCandidate, UpdateCandidate } from "@/components/types/cantidates";
 
 const API = process.env.API_BASE_URL;
@@ -25,6 +27,7 @@ export async function PostCandidatesAction(
   token: string
 ) {
   try {
+    
     const formData = new FormData();
     formData.append("name", values.name.toUpperCase());
     formData.append("description", values.description.toUpperCase());

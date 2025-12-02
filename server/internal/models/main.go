@@ -10,13 +10,13 @@ type TypeCandidates string
 type TypeVote string
 
 const (
-	RolAdmin    Rol           = "ADMIN"
-	TAposition  TypePositions = "AUTORIDAD"
-	TIposition  TypePositions = "INTEGRANTE"
+	RolAdmin    Rol            = "ADMIN"
+	TAposition  TypePositions  = "AUTORIDAD"
+	TIposition  TypePositions  = "ORGANO"
 	TCcandidate TypeCandidates = "CANDIDATO"
 	TCnull      TypeCandidates = "NULL"
-	TVpersonnel TypeVote      = "PERSONAL"
-	TVpublic    TypeVote      = "PUBLICO"
+	TVpersonnel TypeVote       = "PERSONAL"
+	TVpublic    TypeVote       = "PUBLICO"
 )
 
 type Base struct {
@@ -52,11 +52,11 @@ type Account struct {
 
 type Candidate struct {
 	Base
-	Name          string        `gorm:"type:varchar(120);not null"`
-	Description   *string       `gorm:"type:text"`
-	ImageID       *string       `gorm:"type:uuid"`
-	Image         *Image        `gorm:"foreignKey:ImageID;constraint:OnDelete:SET NULL"`
-	IsActive      bool          `gorm:"default:true"`
+	Name          string         `gorm:"type:varchar(120);not null"`
+	Description   *string        `gorm:"type:text"`
+	ImageID       *string        `gorm:"type:uuid"`
+	Image         *Image         `gorm:"foreignKey:ImageID;constraint:OnDelete:SET NULL"`
+	IsActive      bool           `gorm:"default:true"`
 	TypeCandidate TypeCandidates `gorm:"not null,default:CANDIDATO"`
 
 	PositionID *string   `gorm:"type:uuid"`
@@ -74,7 +74,7 @@ type Position struct {
 	Base
 	Name            string        `gorm:"type:varchar(255);not null;unique"`
 	Description     *string       `gorm:"type:text"`
-	TypePosition    TypePositions `gorm:"not null,default:INTEGRANTE"`
+	TypePosition    TypePositions `gorm:"not null,default:ORGANO"`
 	TotalVotes      int           `gorm:"not null;default:0"`
 	ValidPercentage float64       `gorm:"not null;default:0"`
 

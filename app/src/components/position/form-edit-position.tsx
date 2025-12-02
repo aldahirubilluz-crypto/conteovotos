@@ -52,7 +52,7 @@ export default function FormEditPosition({
     defaultValues: {
       name: position.name,
       description: position.description,
-      typePosition: position.typePosition as "AUTORIDAD" | "INTEGRANTE",
+      typePosition: position.typePosition as "AUTORIDAD" | "ORGANO",
       totalVotes: position.totalVotes,
       validPercentage: position.validPercentage,
     },
@@ -181,7 +181,7 @@ export default function FormEditPosition({
                   <FormItem>
                     <FormLabel>Tipo de Puesto</FormLabel>
                     <div className="flex gap-2">
-                      {["AUTORIDAD", "INTEGRANTE"].map((option) => (
+                      {["AUTORIDAD", "ORGANO"].map((option) => (
                         <Button
                           key={option}
                           type="button"

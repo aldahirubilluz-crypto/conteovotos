@@ -1,4 +1,5 @@
 "use server"
+
 import { PosPostion, UpdatePostion } from "@/components/types/position";
 import { PostCandidatesAction } from "./cantidatos";
 
@@ -50,6 +51,7 @@ export async function PostPositionAction(values: PosPostion, token: string) {
         data: null,
       };
     }
+
     await PostCandidatesAction(
       {
         name: "VOTOS NULOS",

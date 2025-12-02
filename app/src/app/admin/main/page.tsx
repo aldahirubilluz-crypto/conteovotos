@@ -34,7 +34,7 @@ import {
 } from "@/components/schema/schema-register";
 import { ConfirmDialog } from "@/components/ui/dialog-confirm";
 
-const API = process.env.API_BASE_URL;
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 export default function Page() {
   const [positions, setPositions] = useState<GetPosition[]>([]);
@@ -57,6 +57,7 @@ export default function Page() {
 
   useEffect(() => {
     (async () => {
+
       const persons = await GetCantidatosAction();
       const cargos = await GetPositionAction();
       if (Array.isArray(persons?.data)) setCandidates(persons.data);
@@ -263,7 +264,7 @@ export default function Page() {
                               {c.imageId ? (
                                 <img
                                   src={`${API}/images/${c.imageId}`}
-                                  alt={c.name}
+                                  alt={`${API}/images/${c.imageId}`}
                                   className="w-28 h-28 object-cover rounded-md border"
                                 />
                               ) : (

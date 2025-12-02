@@ -22,7 +22,7 @@ interface Vote {
   position: {
     id: string;
     name: string;
-    typePosition: "AUTORIDAD" | "INTEGRANTE";
+    typePosition: "AUTORIDAD" | "ORGANO";
   };
 }
 
