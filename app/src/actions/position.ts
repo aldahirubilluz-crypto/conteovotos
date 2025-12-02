@@ -1,3 +1,4 @@
+"use server"
 import { PosPostion, UpdatePostion } from "@/components/types/position";
 import { PostCandidatesAction } from "./cantidatos";
 

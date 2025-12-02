@@ -46,6 +46,7 @@ const navItems = [
 
 export default function MainSidebar({
   children,
+  session,
 }: {
   children: React.ReactNode;
   session: Session;
@@ -94,6 +95,7 @@ export default function MainSidebar({
           </SidebarContent>
 
           <SidebarFooter className="px-4 py-4">
+            <div className="text-sm mb-3 opacity-70">{session.user?.email}</div>
             <Button
               variant="destructive"
               size="sm"
@@ -160,6 +162,9 @@ export default function MainSidebar({
                 </SidebarMenu>
               </SidebarContent>
               <SidebarFooter className="px-4 py-4">
+                <div className="text-sm mb-3 opacity-70">
+                  {session.user?.email}
+                </div>
                 <Button
                   variant="destructive"
                   size="sm"

@@ -1,4 +1,3 @@
-// src/app/admin/main/layout.tsx
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import MainSidebar from "@/components/sidebar-layout";
